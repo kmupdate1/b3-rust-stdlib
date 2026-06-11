@@ -11,4 +11,4 @@ impl B3Invariant<B3UInt64> for B3UInt64Rule {
     }
 }
 
-pub type ValidatedB3UInt64 = B3Validate<B3UInt64, B3UInt64Rule>;
+pub type ValidateB3UInt64 = B3Validate<B3UInt64, B3UInt64Rule>;
