@@ -1,7 +1,9 @@
 use crate::number::Integer;
 
-impl Integer for i8 {}
-impl Integer for i16 {}
-impl Integer for i32 {}
-impl Integer for i64 {}
-impl Integer for isize {}
+macro_rules! impl_integer {
+    ($($t:ty),* $(,)?) => {
+        $(impl Integer for $t {})*
+    };
+}
+
+impl_integer!(i8, i16, i32, i64, i128, isize);
