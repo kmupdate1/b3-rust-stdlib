@@ -1,7 +1,7 @@
 use std::ops::{Index, IndexMut};
 
 pub struct Vector<T, const N: usize> {
-    values: [T; N],
+    pub(crate) values: [T; N],
 }
 
 impl<T, const N: usize> Vector<T, N> {
