@@ -1,6 +1,15 @@
 [workspace]
 resolver = "3"
-members = ["core", "num", "mem", "sync", "stdlib"]
+members = [
+    "core",
+    "math",
+    "quantity",
+    "time",
+    "finance",
+    "data",
+    "runtime",
+    "stdlib"
+]
 
 [workspace.package]
 version = "0.1.0"

@@ -7,20 +7,32 @@ name = "core"
 version = "0.1.0"
 
 [[package]]
-name = "mem"
+name = "data"
 version = "0.1.0"
 
 [[package]]
-name = "num"
+name = "finance"
+version = "0.1.0"
+
+[[package]]
+name = "math"
+version = "0.1.0"
+
+[[package]]
+name = "quantity"
 version = "0.1.0"
 dependencies = [
  "core",
 ]
 
 [[package]]
+name = "runtime"
+version = "0.1.0"
+
+[[package]]
 name = "stdlib"
 version = "0.1.0"
 
 [[package]]
-name = "sync"
+name = "time"
 version = "0.1.0"
