@@ -54,11 +54,11 @@ impl<T, const N: usize> Vector<T, N>
 where
     T: Zero + Add<Output = T> + Mul<Output = T> + Copy,
 {
-    pub fn dot(&self, vector: &Self) -> T {
+    pub fn dot(&self, rhs: &Self) -> T {
         let mut sum = T::zero();
 
         for i in 0..N {
-            sum = sum + self[i] * vector[i];
+            sum = sum + self[i] * rhs[i];
         }
 
         sum
