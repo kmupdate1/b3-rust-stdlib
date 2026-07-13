@@ -1,4 +1,4 @@
-use crate::algebra::identity::identity::Identity;
+use crate::algebra::identity::Identity;
 
 macro_rules! impl_identity {
     ($($t:ty),* $(,)?) => {
