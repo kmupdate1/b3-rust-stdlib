@@ -1,5 +1,6 @@
 use std::ops::{Index, IndexMut};
 
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Vector<T, const N: usize> {
     pub(crate) values: [T; N],
 }
