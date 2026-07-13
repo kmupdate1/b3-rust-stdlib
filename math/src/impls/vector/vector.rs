@@ -1,5 +1,6 @@
 use std::ops::{Add, Div, Mul, Sub};
 use crate::algebra::Zero;
+use crate::number::Magnitude;
 use crate::vector::Vector;
 
 impl<T, const N: usize> Add for Vector<T, N>
@@ -62,6 +63,13 @@ where
         }
 
         sum
+    }
+}
+
+impl<T, const N: usize> Magnitude for Vector<T, N> {
+    type Output = T;
+    fn magnitude(&self) -> Self::Output {
+        todo!()
     }
 }
 

@@ -3,3 +3,4 @@ mod one;
 mod identity;
 mod remainder;
 mod inverse;
+mod sqrt;
