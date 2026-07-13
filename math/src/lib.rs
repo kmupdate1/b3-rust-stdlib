@@ -10,3 +10,4 @@ pub mod traits;
 pub mod ratio;
 pub mod impls;
 mod computer;
+mod vector;
