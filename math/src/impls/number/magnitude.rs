@@ -37,3 +37,33 @@ impl_magnitude_for_signed!(
     isize => usize,
 );
 impl_magnitude_for_float!(f32, f64);
+
+#[cfg(test)]
+mod tests {
+    use crate::number::Magnitude;
+
+    #[test]
+    fn signed_integer_magnitude() {
+        assert_eq!((-5i8).magnitude(), 5u8);
+        assert_eq!((-100i32).magnitude(), 100u32);
+        assert_eq!((-123i64).magnitude(), 123u64);
+    }
+
+    #[test]
+    fn signed_integer_min_value() {
+        assert_eq!(i8::MIN.magnitude(), 128u8);
+        assert_eq!(i16::MIN.magnitude(), 32768u16);
+    }
+
+    #[test]
+    fn unsigned_integer_magnitude() {
+        assert_eq!(5u8.magnitude(), 5u8);
+        assert_eq!(100u32.magnitude(), 100u32);
+    }
+
+    #[test]
+    fn float_magnitude() {
+        assert_eq!((-3.5f32).magnitude(), 3.5f32);
+        assert_eq!((-7.25f64).magnitude(), 7.25f64);
+    }
+}
