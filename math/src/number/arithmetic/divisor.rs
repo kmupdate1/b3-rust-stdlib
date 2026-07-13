@@ -14,3 +14,21 @@ impl<T> DivisorSet<T> {
 
     pub fn len(&self) -> usize { self.divisors.len() }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn divisor_set_iteration() {
+        let set = DivisorSet {
+            divisors: vec![1, 2, 3, 6],
+        };
+
+        assert_eq!(set.len(), 4);
+
+        let values: Vec<_> = set.iter().copied().collect();
+
+        assert_eq!(values, vec![1, 2, 3, 6]);
+    }
+}
