@@ -29,6 +29,14 @@ impl<T, const N: usize> AsRef<[T; N]> for Vector<T, N> {
     fn as_ref(&self) -> &[T; N] { &self.values }
 }
 
+impl<T, const N: usize> AsMut<[T; N]> for Vector<T, N> {
+    fn as_mut(&mut self) -> &mut [T; N] { &mut self.values }
+}
+
+impl<T, const N: usize> From<[T; N]> for Vector<T, N> {
+    fn from(value: [T; N]) -> Self { Self::new(value) }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -80,5 +88,24 @@ mod tests {
         assert_eq!(v[0], 1.0);
         assert_eq!(v[1], 5.0);
         assert_eq!(v[2], 3.0);
+    }
+
+    #[test]
+    fn vector_from_array() {
+        let v: Vector<i32, 3> = [1, 2, 3].into();
+
+        assert_eq!(v[0], 1);
+        assert_eq!(v[1], 2);
+        assert_eq!(v[2], 3);
+    }
+
+    #[test]
+    fn vector_as_mut() {
+        let mut v = Vector::new([1, 2, 3]);
+
+        let values = v.as_mut();
+        values[1] = 10;
+
+        assert_eq!(v[1], 10);
     }
 }
