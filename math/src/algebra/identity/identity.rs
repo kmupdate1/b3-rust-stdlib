@@ -1,5 +1,5 @@
 use crate::algebra::identity::{One, Zero};
 
-pub trait Neutral:
+pub trait Identity:
 Zero + One
 {}

@@ -1,7 +1,7 @@
 pub(crate) mod zero;
 mod one;
-pub mod neutral;
+pub mod identity;
 
 pub use zero::Zero;
 pub use one::One;
-pub use neutral::Neutral;
+pub use identity::Identity;

@@ -1,6 +1,6 @@
-use crate::algebra::identity::neutral::Neutral;
+use crate::algebra::identity::identity::Identity;
 use crate::number::Signed;
 
 pub trait Integer:
-Neutral + Signed + PartialOrd
+Identity + Signed + PartialOrd
 {}
