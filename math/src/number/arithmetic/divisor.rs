@@ -16,7 +16,7 @@ impl<T> DivisorSet<T> {
 }
 
 impl<T> DivisorSet<T> {
-    pub fn new(divisors: Vec<T>) -> Self {
+    pub(crate) fn from_vec(divisors: Vec<T>) -> Self {
         Self { divisors }
     }
 }
