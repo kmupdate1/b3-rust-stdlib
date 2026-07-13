@@ -37,4 +37,15 @@ mod tests {
 
         assert_eq!(values, vec![1, 2, 3, 6]);
     }
+
+    #[test]
+    fn divisor_set_iteration2() {
+        let set = DivisorSet::from_vec(vec![1, 2, 3, 6]);
+
+        assert_eq!(set.len(), 4);
+
+        let values: Vec<_> = set.iter().copied().collect();
+
+        assert_eq!(values, vec![1, 2, 3, 6]);
+    }
 }
