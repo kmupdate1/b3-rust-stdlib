@@ -1,0 +1,4 @@
+[package]
+name = "finance"
+version.workspace = true
+edition.workspace = true

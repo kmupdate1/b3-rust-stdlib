@@ -1,0 +1,7 @@
+[package]
+name = "quantity"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+b3-core = { package = "core", path = "../core" }
