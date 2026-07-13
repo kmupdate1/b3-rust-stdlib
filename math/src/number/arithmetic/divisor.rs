@@ -15,6 +15,12 @@ impl<T> DivisorSet<T> {
     pub fn len(&self) -> usize { self.divisors.len() }
 }
 
+impl<T> DivisorSet<T> {
+    pub fn new(divisors: Vec<T>) -> Self {
+        Self { divisors }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
