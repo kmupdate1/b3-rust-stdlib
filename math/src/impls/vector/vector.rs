@@ -10,7 +10,7 @@ where
         let mut values = self.values;
 
         for i in 0..N {
-            values[i] = self.values[i] + rhs.values[i];
+            values[i] = values[i] + rhs.values[i];
         }
 
         Self { values }
@@ -26,7 +26,7 @@ where
         let mut values = self.values;
 
         for i in 0..N {
-            values[i] = self.values[i] - rhs.values[i];
+            values[i] = values[i] - rhs.values[i];
         }
 
         Self { values }
@@ -42,7 +42,7 @@ where
         let mut values = self.values;
 
         for i in 0..N {
-            values[i] = self.values[i] * rhs;
+            values[i] = values[i] * rhs;
         }
 
         Self { values }
