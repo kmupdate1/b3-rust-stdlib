@@ -1,62 +1,39 @@
 use crate::number::Magnitude;
 
-impl Magnitude for i8 {
-    type Output = u8;
-
-    fn magnitude(&self) -> Self::Output { self.unsigned_abs() }
+macro_rules! impl_magnitude_for_unsigned {
+    ($($t:ty),* $(,)?) => {
+        $(impl Magnitude for $t {
+            type Output = $t;
+            fn magnitude(&self) -> Self::Output { *self }
+        })*
+    };
 }
 
-impl Magnitude for i16 {
-    type Output = u16;
-    fn magnitude(&self) -> Self::Output { self.unsigned_abs() }
+macro_rules! impl_magnitude_for_signed {
+    ($($signed:ty => $unsigned:ty),* $(,)?) => {
+        $(impl Magnitude for $signed {
+            type Output = $unsigned;
+            fn magnitude(&self) -> Self::Output { self.unsigned_abs() }
+        })*
+    };
 }
 
-impl Magnitude for i32 {
-    type Output = u32;
-    fn magnitude(&self) -> Self::Output { self.unsigned_abs() }
+macro_rules! impl_magnitude_for_float {
+    ($($t:ty),* $(,)?) => {
+        $(impl Magnitude for $t {
+            type Output = $t;
+            fn magnitude(&self) -> Self::Output { self.abs() }
+        })*
+    };
 }
 
-impl Magnitude for i64 {
-    type Output = u64;
-    fn magnitude(&self) -> Self::Output { self.unsigned_abs() }
-}
-
-impl Magnitude for i128 {
-    type Output = u128;
-    fn magnitude(&self) -> Self::Output { self.unsigned_abs() }
-}
-
-impl Magnitude for isize {
-    type Output = usize;
-    fn magnitude(&self) -> Self::Output { self.unsigned_abs() }
-}
-
-impl Magnitude for u8 {
-    type Output = u8;
-    fn magnitude(&self) -> Self::Output { *self }
-}
-
-impl Magnitude for u16 {
-    type Output = u16;
-    fn magnitude(&self) -> Self::Output { *self }
-}
-
-impl Magnitude for u32 {
-    type Output = u32;
-    fn magnitude(&self) -> Self::Output { *self }
-}
-
-impl Magnitude for u64 {
-    type Output = u64;
-    fn magnitude(&self) -> Self::Output { *self }
-}
-
-impl Magnitude for u128 {
-    type Output = u128;
-    fn magnitude(&self) -> Self::Output { *self }
-}
-
-impl Magnitude for usize {
-    type Output = usize;
-    fn magnitude(&self) -> Self::Output { *self }
-}
+impl_magnitude_for_unsigned!(u8, u16, u32, u64, u128, usize);
+impl_magnitude_for_signed!(
+    i8 => u8,
+    i16 => u16,
+    i32 => u32,
+    i64 => u64,
+    i128 => u128,
+    isize => usize,
+);
+impl_magnitude_for_float!(f32, f64);
