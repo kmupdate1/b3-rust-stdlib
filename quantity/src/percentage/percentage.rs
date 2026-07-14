@@ -1,3 +1,7 @@
+/**
+ * 百分率による表現
+ */
+
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Percentage<T> {
     value: T,
