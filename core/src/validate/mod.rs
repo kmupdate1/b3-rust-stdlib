@@ -1,3 +1,3 @@
-mod varidate;
+mod validate;
 
-pub use varidate::*;
+pub use validate::*;
