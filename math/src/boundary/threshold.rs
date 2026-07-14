@@ -17,6 +17,48 @@ impl<T> Threshold<T> {
     pub fn bound(&self) -> Bound { self.bound }
 }
 
+impl<T> Threshold<T> {
+    pub fn less_than(value: T) -> Self {
+        Self {
+            value,
+            order: Ordering::Less,
+            bound: Bound::Exclusive,
+        }
+    }
+
+    pub fn less_equal(value: T) -> Self {
+        Self {
+            value,
+            order: Ordering::Less,
+            bound: Bound::Inclusive,
+        }
+    }
+
+    pub fn greater_than(value: T) -> Self {
+        Self {
+            value,
+            order: Ordering::Greater,
+            bound: Bound::Exclusive,
+        }
+    }
+
+    pub fn greater_equal(value: T) -> Self {
+        Self {
+            value,
+            order: Ordering::Greater,
+            bound: Bound::Inclusive,
+        }
+    }
+
+    pub fn equal(value: T) -> Self {
+        Self {
+            value,
+            order: Ordering::Equal,
+            bound: Bound::Inclusive,
+        }
+    }
+}
+
 impl<T> Threshold<T>
 where
     T: PartialOrd + PartialEq,
@@ -100,5 +142,50 @@ mod tests {
 
         assert!(t.contains(&30));
         assert!(!t.contains(&29));
+    }
+
+    #[test]
+    fn threshold_less_than_constructor() {
+        let t = Threshold::less_than(30);
+
+        assert!(t.contains(&29));
+        assert!(!t.contains(&30));
+        assert!(!t.contains(&31));
+    }
+
+    #[test]
+    fn threshold_less_equal_constructor() {
+        let t = Threshold::less_equal(30);
+
+        assert!(t.contains(&29));
+        assert!(t.contains(&30));
+        assert!(!t.contains(&31));
+    }
+
+    #[test]
+    fn threshold_greater_than_constructor() {
+        let t = Threshold::greater_than(30);
+
+        assert!(!t.contains(&29));
+        assert!(!t.contains(&30));
+        assert!(t.contains(&31));
+    }
+
+    #[test]
+    fn threshold_greater_equal_constructor() {
+        let t = Threshold::greater_equal(30);
+
+        assert!(!t.contains(&29));
+        assert!(t.contains(&30));
+        assert!(t.contains(&31));
+    }
+
+    #[test]
+    fn threshold_equal_constructor() {
+        let t = Threshold::equal(30);
+
+        assert!(!t.contains(&29));
+        assert!(t.contains(&30));
+        assert!(!t.contains(&31));
     }
 }
