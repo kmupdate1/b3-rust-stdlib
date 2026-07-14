@@ -1,5 +1,6 @@
 use super::{IntervalError, Threshold};
 use b3_core::error::Result;
+use b3_core::validate::Validate;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Interval<T> {
@@ -21,8 +22,20 @@ impl<T> Interval<T>
 where
     T: PartialOrd,
 {
-    pub fn is_valid(&self) -> bool {
+    fn is_valid(&self) -> bool {
         self.lower.value() <= self.upper.value()
+    }
+}
+
+impl<T> Validate for Interval<T>
+where
+    T: PartialOrd,
+{
+    type Error = IntervalError;
+
+    fn validate(&self) -> Result<(), Self::Error> {
+        if self.is_valid() { Ok(()) }
+        else { Err(IntervalError::InvalidRange) }
     }
 }
 
@@ -34,11 +47,9 @@ where
         lower: Threshold<T>,
         upper: Threshold<T>,
     ) -> Result<Self, IntervalError> {
-        if lower.value() > upper.value() {
-            return Err(IntervalError::InvalidRange);
-        }
-
-        Ok(Self { lower, upper })
+        let interval = Interval { lower, upper };
+        interval.validate()?;
+        Ok(interval)
     }
 }
 
@@ -53,6 +64,7 @@ where
 
 #[cfg(test)]
 mod tests {
+    use b3_core::validate::Validate;
     use crate::boundary::{Interval, IntervalError, Threshold};
 
     #[test]
@@ -115,6 +127,29 @@ mod tests {
 
         assert_eq!(
             result,
+            Err(IntervalError::InvalidRange)
+        );
+    }
+
+    #[test]
+    fn interval_validate_ok() {
+        let interval = Interval::new(
+            Threshold::greater_equal(40),
+            Threshold::less_equal(60),
+        );
+
+        assert_eq!(interval.validate(), Ok(()));
+    }
+
+    #[test]
+    fn interval_validate_err() {
+        let interval = Interval::new(
+            Threshold::greater_equal(60),
+            Threshold::less_equal(40),
+        );
+
+        assert_eq!(
+            interval.validate(),
             Err(IntervalError::InvalidRange)
         );
     }
