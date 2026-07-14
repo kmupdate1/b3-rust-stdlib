@@ -1,3 +1,5 @@
+use crate::ratio::Ratio;
+
 /**
  * 全体に対する割合を表す。
  *
@@ -5,5 +7,5 @@
  */
 
 pub struct Proportion<T> {
-    value: T,
+    value: Ratio<T>,
 }
