@@ -17,6 +17,9 @@ version = "0.1.0"
 [[package]]
 name = "b3-math"
 version = "0.1.0"
+dependencies = [
+ "b3-core",
+]
 
 [[package]]
 name = "b3-quantity"
