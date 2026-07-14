@@ -1,5 +1,6 @@
 use crate::rational::Fraction;
 use b3_core::error::Result;
+use b3_core::validate::Validate;
 use crate::ratio::error::RatioError;
 
 /**
@@ -24,7 +25,9 @@ impl<T> Ratio<T> {
 
 impl<T> Ratio<T> {
     pub fn try_new(value: T) -> Result<Self, RatioError> {
-        todo!("validation")
+        let ratio = Ratio { value };
+        ratio.validate()?;
+        Ok(ratio)
     }
 
     pub fn from_fraction(fraction: Fraction<T>) -> Result<Self, RatioError> {
@@ -33,5 +36,37 @@ impl<T> Ratio<T> {
 
     pub fn from_parts(left: T, right: T) -> Result<Self, RatioError> {
         Self::try_new(todo!("left / right"))
+    }
+}
+
+impl<T> Validate for Ratio<T> {
+    type Error = RatioError;
+
+    fn validate(&self) -> Result<(), Self::Error> {
+        /// A. Nothing
+        /// B. Must not be NaN
+        /// C. Must not be Infinite
+        /// D. Must not be Negative
+        Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use b3_core::validate::Validate;
+    use crate::ratio::Ratio;
+
+    #[test]
+    fn ratio_try_new_ok() {
+        let ratio = Ratio::try_new(2.0);
+
+        assert!(ratio.is_ok());
+    }
+
+    #[test]
+    fn ratio_validate_ok() {
+        let ratio = Ratio::new(2.0);
+
+        assert_eq!(ratio.validate(), Ok(()));
     }
 }
