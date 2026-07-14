@@ -1,5 +1,2 @@
-/**
- * 比・割合
- */
-
-pub mod fraction;
+mod ratio;
+mod proportion;
