@@ -24,18 +24,16 @@ impl Finite for isize {
     fn finiteness(&self) -> Finiteness { Finiteness::Finite }
 }
 
-impl Finite for f32 {
-    fn finiteness(&self) -> Finiteness {
-        if self.is_nan() { Finiteness::NaN }
-        else if self.is_finite() { Finiteness::Finite }
-        else { Finiteness::Infinite }
-    }
+macro_rules! impl_finite_for_float {
+    ($($t:ty),* $(,)?) => {
+        $(impl Finite for $t {
+            fn finiteness(&self) -> Finiteness {
+                if self.is_nan() { Finiteness::NaN }
+                else if self.is_finite() { Finiteness::Finite }
+                else { Finiteness::Infinite }
+            }
+        })*
+    };
 }
 
-impl Finite for f64 {
-    fn finiteness(&self) -> Finiteness {
-        if self.is_nan() { Finiteness::NaN }
-        else if self.is_finite() { Finiteness::Finite }
-        else { Finiteness::Infinite }
-    }
-}
+impl_finite_for_float!(f32, f64);
