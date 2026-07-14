@@ -1,19 +1,21 @@
+use b3_math::ratio::Ratio;
+
 /**
  * 百分率による表現
  */
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Percentage<T> {
-    value: T,
+    ratio: Ratio<T>,
 }
 
 impl<T> Percentage<T> {
     pub fn new(value: T) -> Self {
-        Self { value }
+        Self { ratio: Ratio::new(value) }
     }
 
-    pub fn value(&self) -> &T { &self.value }
-    pub fn value_mut(&mut self) -> &mut T { &mut self.value }
+    pub fn ratio(&self) -> &Ratio<T> { &self.ratio }
+    pub fn value_mut(&mut self) -> &mut Ratio<T> { &mut self.ratio }
 }
 
 impl<T> Percentage<T>
