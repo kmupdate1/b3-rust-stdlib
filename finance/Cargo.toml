@@ -1,4 +1,4 @@
 [package]
-name = "finance"
+name = "b3-finance"
 version.workspace = true
 edition.workspace = true

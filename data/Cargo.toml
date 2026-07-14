@@ -1,4 +1,4 @@
 [package]
-name = "data"
+name = "b3-data"
 version.workspace = true
 edition.workspace = true
