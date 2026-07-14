@@ -1,7 +1,6 @@
 extern crate core;
 
 pub mod scalar;
-pub mod rate;
 pub mod algebra;
 pub mod number;
 pub mod relation;
@@ -11,4 +10,4 @@ pub mod rational;
 pub mod impls;
 mod computer;
 pub mod vector;
-mod ratio;
+pub mod ratio;
