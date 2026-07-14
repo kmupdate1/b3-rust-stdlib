@@ -1,4 +1,5 @@
 use super::{IntervalError, Threshold};
+use b3_core::error::Result;
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Interval<T> {
