@@ -1,1 +1,1 @@
-// Reserved for strongly typed identifiers.
+//! Strongly typed identifiers.

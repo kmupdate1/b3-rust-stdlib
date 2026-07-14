@@ -1,1 +1,1 @@
-// Reserved for marker traits.
+//! Marker traits for the B3 ecosystem.
