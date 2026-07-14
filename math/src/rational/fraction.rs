@@ -19,9 +19,9 @@ impl<T> Fraction<T> {
         Self { numerator, denominator }
     }
 
-    pub fn numerator(&self) -> &T { todo!("Fraction -> T") }
-    pub fn denominator(&self) -> &T { todo!("Fraction -> T") }
-    pub fn into_parts(self) -> (T, T) { todo!("Fraction -> T") }
+    pub fn numerator(&self) -> &T { &self.numerator }
+    pub fn denominator(&self) -> &T { &self.denominator }
+    pub fn into_parts(self) -> (T, T) { (self.numerator, self.denominator) }
 }
 
 impl<T> Fraction<T>
@@ -89,6 +89,11 @@ mod tests {
         let result = Fraction::try_new(1, 2);
 
         assert!(result.is_ok());
+
+        let fraction = result.unwrap();
+
+        assert_eq!(fraction.numerator(), &1);
+        assert_eq!(fraction.denominator(), &2);
     }
 
     #[test]
