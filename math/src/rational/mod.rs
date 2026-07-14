@@ -3,7 +3,7 @@
  */
 
 pub mod fraction;
-mod rational;
+pub mod rational;
 
 pub use fraction::*;
 pub use rational::*;
