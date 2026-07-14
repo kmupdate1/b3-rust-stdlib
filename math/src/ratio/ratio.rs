@@ -23,7 +23,9 @@ impl<T> Ratio<T> {
     pub fn into_inner(self) -> T { self.value }
 }
 
-impl<T> Ratio<T> {
+impl<T> Ratio<T>
+where
+{
     pub fn try_new(value: T) -> Result<Self, RatioError> {
         let ratio = Ratio { value };
         ratio.validate()?;
