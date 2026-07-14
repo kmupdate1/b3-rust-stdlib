@@ -1,6 +1,7 @@
 use super::Bound;
 use crate::relation::Ordering;
 
+#[derive(PartialEq, Debug, Clone)]
 pub struct Threshold<T> {
     value: T,
     order: Ordering,
