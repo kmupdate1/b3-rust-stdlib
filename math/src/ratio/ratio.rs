@@ -33,9 +33,12 @@ where
     }
 
     pub fn from_fraction(fraction: Fraction<T>) -> Result<Self, RatioError> {
+        let (n, d) = fraction.into_parts();
+        Self::from_parts(n, d);
         Self::try_new(todo!("fraction -> value"))
     }
 
+    // トレイト境界多数のため保留
     pub fn from_parts(left: T, right: T) -> Result<Self, RatioError> {
         Self::try_new(todo!("left / right"))
     }
