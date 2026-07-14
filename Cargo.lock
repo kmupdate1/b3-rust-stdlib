@@ -3,36 +3,36 @@
 version = 4
 
 [[package]]
-name = "core"
+name = "b3-core"
 version = "0.1.0"
 
 [[package]]
-name = "data"
+name = "b3-data"
 version = "0.1.0"
 
 [[package]]
-name = "finance"
+name = "b3-finance"
 version = "0.1.0"
 
 [[package]]
-name = "math"
+name = "b3-math"
 version = "0.1.0"
 
 [[package]]
-name = "quantity"
+name = "b3-quantity"
 version = "0.1.0"
 dependencies = [
- "core",
+ "b3-core",
 ]
 
 [[package]]
-name = "runtime"
+name = "b3-runtime"
 version = "0.1.0"
 
 [[package]]
-name = "stdlib"
+name = "b3-stdlib"
 version = "0.1.0"
 
 [[package]]
-name = "time"
+name = "b3-time"
 version = "0.1.0"

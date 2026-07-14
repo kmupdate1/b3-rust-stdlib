@@ -1,5 +1,5 @@
 [package]
-name = "stdlib"
+name = "b3-stdlib"
 version.workspace = true
 edition.workspace = true
 

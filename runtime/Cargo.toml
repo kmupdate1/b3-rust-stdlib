@@ -1,4 +1,4 @@
 [package]
-name = "runtime"
+name = "b3-runtime"
 version.workspace = true
 edition.workspace = true

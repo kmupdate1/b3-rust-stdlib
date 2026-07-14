@@ -1,5 +1,5 @@
 [package]
-name = "math"
+name = "b3-math"
 version.workspace = true
 edition.workspace = true
 
