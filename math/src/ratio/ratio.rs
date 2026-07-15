@@ -1,6 +1,7 @@
-use crate::rational::Fraction;
+use crate::rational::{Fraction, FractionError};
 use b3_core::error::Result;
 use b3_core::validate::Validate;
+use crate::algebra::Zero;
 use crate::ratio::error::RatioError;
 
 /**
@@ -9,7 +10,7 @@ use crate::ratio::error::RatioError;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Ratio<T> {
-    value: T,
+    value: T, // -> fraction: Fraction<T>,
 }
 
 impl<T> Ratio<T> {
@@ -18,16 +19,19 @@ impl<T> Ratio<T> {
         Self { value }
     }
 
-    pub fn value(&self) -> &T { &self.value }
+    pub fn value(&self) -> &T {
+        todo!("&self.value.to_rational()")
+    }
     pub fn value_mut(&mut self) -> &mut T { &mut self.value }
     pub fn into_inner(self) -> T { self.value }
 }
 
 impl<T> Ratio<T>
 where
+    T: Zero,
 {
     pub fn try_new(value: T) -> Result<Self, RatioError> {
-        let ratio = Ratio { value };
+        let ratio = Ratio { value: value };
         ratio.validate()?;
         Ok(ratio)
     }
@@ -35,12 +39,13 @@ where
     pub fn from_fraction(fraction: Fraction<T>) -> Result<Self, RatioError> {
         let (n, d) = fraction.into_parts();
         Self::from_parts(n, d);
-        Self::try_new(todo!("fraction -> value"))
+        todo!()
     }
 
-    // トレイト境界多数のため保留
-    pub fn from_parts(left: T, right: T) -> Result<Self, RatioError> {
-        Self::try_new(todo!("left / right"))
+    pub fn from_parts(left: T, right: T) -> Result<Self, FractionError> {
+        let fraction = Fraction::try_new(left, right)?;
+        Self::from_fraction(fraction);
+        todo!()
     }
 }
 

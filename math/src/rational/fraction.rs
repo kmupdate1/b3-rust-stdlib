@@ -1,6 +1,9 @@
+use core::mem::swap;
+use std::ops::Div;
 use b3_core::error::Result;
 use b3_core::validate::Validate;
-use crate::algebra::Zero;
+use crate::algebra::{MultiplicativeInverse, One, Zero};
+use crate::number::gcd::GreatestCommonDivisor;
 use crate::rational::error::FractionError;
 
 /**
@@ -35,6 +38,28 @@ where
     }
 }
 
+impl<T> MultiplicativeInverse for Fraction<T>
+where
+    T: Zero + Clone,
+{
+    type Output = Self;
+    type Error = FractionError;
+
+    fn try_inverse(&self) -> Result<Self::Output, Self::Error> {
+        let mut fraction = self.clone();
+        fraction.try_invert()?;
+        Ok(fraction)
+    }
+
+    fn try_invert(&mut self) -> Result<(), Self::Error> {
+        if self.numerator.is_zero() {
+            return Err(FractionError::ZeroNumeratorInverse)
+        }
+
+        Ok(swap(&mut self.numerator, &mut self.denominator))
+    }
+}
+
 impl<T> Validate for  Fraction<T>
 where
     T: Zero + PartialEq,
@@ -61,9 +86,39 @@ where
     }
 }
 
+impl<T> Fraction<T>
+where
+    T: GreatestCommonDivisor + One + PartialEq,
+{
+    pub fn is_reduced(&self) -> bool {
+        self.numerator.gcd(&self.denominator).is_one()
+    }
+}
+
+impl<T> Fraction<T>
+where
+    T: GreatestCommonDivisor + One + Div<Output = T> + Clone,
+{
+    pub fn reduce(&mut self) {
+        let gcd = self.numerator.gcd(&self.denominator);
+
+        if gcd.is_one() { return; }
+
+        self.numerator = self.numerator.clone() / gcd.clone();
+        self.denominator = self.denominator.clone() / gcd;
+    }
+
+    pub fn reduced(&self) -> Self {
+        let mut fraction = self.clone();
+        fraction.reduce();
+        fraction
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use b3_core::validate::Validate;
+    use crate::algebra::MultiplicativeInverse;
     use crate::rational::error::FractionError;
     use crate::rational::Fraction;
 
@@ -104,5 +159,98 @@ mod tests {
             result,
             Err(FractionError::ZeroDenominator)
         );
+    }
+
+    #[test]
+    fn fraction_is_reduced_true() {
+        let fraction = Fraction::new(3, 4);
+
+        assert!(fraction.is_reduced());
+    }
+
+    #[test]
+    fn fraction_is_reduced_false() {
+        let fraction = Fraction::new(6, 8);
+
+        assert!(!fraction.is_reduced());
+    }
+
+    #[test]
+    fn fraction_reduced() {
+        let fraction = Fraction::new(6, 8);
+
+        let reduced = fraction.reduced();
+
+        assert_eq!(reduced.numerator(), &3);
+        assert_eq!(reduced.denominator(), &4);
+    }
+
+    #[test]
+    fn fraction_reduce() {
+        let mut fraction = Fraction::new(6, 8);
+
+        fraction.reduce();
+
+        assert_eq!(fraction.numerator(), &3);
+        assert_eq!(fraction.denominator(), &4);
+    }
+
+    #[test]
+    fn fraction_try_inverse_ok() {
+        let fraction = Fraction::new(2, 3);
+
+        let inverse = fraction.try_inverse().unwrap();
+
+        assert_eq!(inverse.numerator(), &3);
+        assert_eq!(inverse.denominator(), &2);
+    }
+
+    #[test]
+    fn fraction_try_inverse_zero_numerator() {
+        let fraction = Fraction::new(0, 3);
+
+        assert_eq!(
+            fraction.try_inverse(),
+            Err(FractionError::ZeroNumeratorInverse)
+        );
+    }
+
+    #[test]
+    fn fraction_try_invert_ok() {
+        let mut fraction = Fraction::new(2, 3);
+
+        fraction.try_invert().unwrap();
+
+        assert_eq!(fraction.numerator(), &3);
+        assert_eq!(fraction.denominator(), &2);
+    }
+
+    #[test]
+    fn fraction_try_invert_zero_numerator() {
+        let mut fraction = Fraction::new(0, 3);
+
+        assert_eq!(
+            fraction.try_invert(),
+            Err(FractionError::ZeroNumeratorInverse)
+        );
+    }
+
+    #[test]
+    fn fraction_reduce_already_reduced() {
+        let mut fraction = Fraction::new(3, 4);
+
+        fraction.reduce();
+
+        assert_eq!(fraction.numerator(), &3);
+        assert_eq!(fraction.denominator(), &4);
+    }
+
+    #[test]
+    fn fraction_reduced_already_reduced() {
+        let fraction = Fraction::new(3, 4);
+
+        let reduced = fraction.reduced();
+
+        assert_eq!(reduced, fraction);
     }
 }

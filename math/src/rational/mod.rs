@@ -8,3 +8,4 @@ mod error;
 
 pub use fraction::*;
 pub use rational::*;
+pub use error::*;

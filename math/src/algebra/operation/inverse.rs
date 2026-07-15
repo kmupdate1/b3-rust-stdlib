@@ -15,11 +15,16 @@
  * a * (1/a) = 1
  */
 
+use b3_core::error::Result;
+
 pub trait AdditiveInverse {
     fn inverse(&self) -> Self;
+    // fn invert(&mut self);
 }
 
 pub trait MultiplicativeInverse {
     type Output;
-    fn inverse(&self) -> Self::Output;
+    type Error;
+    fn try_inverse(&self) -> Result<Self::Output, Self::Error>;
+    fn try_invert(&mut self) -> Result<(), Self::Error>;
 }

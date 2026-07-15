@@ -7,7 +7,7 @@ use crate::percentage::PercentageError;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Percentage<T> {
-    ratio: Ratio<T>,
+    ratio: Ratio<T>, // -> Fraction<T>,
 }
 
 impl<T> Percentage<T> {
