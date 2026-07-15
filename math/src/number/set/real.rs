@@ -1,3 +1,7 @@
+use b3_core::validate::Validate;
+use crate::algebra::Zero;
+use crate::number::RealError;
+
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Real<T> {
     value: T,
@@ -11,6 +15,28 @@ impl<T> Real<T> {
 
     pub fn value(&self) -> &T { &self.value }
     pub fn into_inner(self) -> T { self.value }
+}
+
+impl<T> Real<T>
+where
+    T: Zero,
+{
+    pub fn try_new(value: T) -> Result<Self, RealError> {
+        let real = Self { value };
+        real.validate()?;
+        Ok(real)
+    }
+}
+
+impl<T> Validate for Real<T>
+where
+    T: Zero,
+{
+    type Error = RealError;
+
+    fn validate(&self) -> b3_core::error::Result<(), Self::Error> {
+        Ok(())
+    }
 }
 
 #[cfg(test)]
@@ -29,5 +55,19 @@ mod tests {
         let real = Real::new(3.14);
 
         assert_eq!(real.into_inner(), 3.14);
+    }
+
+    #[test]
+    fn real_try_new_ok() {
+        let real = Real::try_new(3.14);
+
+        assert!(real.is_ok());
+    }
+
+    #[test]
+    fn real_validate_ok() {
+        let real = Real::new(3.14);
+
+        assert_eq!(real.validate(), Ok(()));
     }
 }
