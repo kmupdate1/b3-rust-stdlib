@@ -50,6 +50,18 @@ where
     }
 }
 
+impl<T> Percentage<T> {
+    /// Percentage -> percent value.
+    pub fn to_percent(&self) -> T {
+        todo!()
+    }
+
+    /// Percentage -> ratio value ([0,1] etc.)
+    pub fn to_ratio(&self) -> T {
+        todo!()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use b3_core::validate::Validate;
