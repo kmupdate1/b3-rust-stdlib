@@ -44,8 +44,7 @@ where
         let fraction = Fraction::try_new(left, right)
             .map_err(RatioError::from)?;
 
-        Self::try_new(fraction)
-        // or Self::from_fraction(fraction)
+        Self::try_new(fraction) // or Self::from_fraction(fraction)
     }
 }
 
@@ -61,6 +60,16 @@ impl<T> Validate for Ratio<T> {
         Ok(())
     }
 }
+
+macro_rules! impl_ratio_eval {
+    ($($t:ty),* $(,)?) => {$(
+        impl Ratio<$t> {
+            pub fn to_value(&self) -> $t { self.fraction.to_rational() }
+        }
+    )*};
+}
+
+impl_ratio_eval!(f32, f64);
 
 #[cfg(test)]
 mod tests {
@@ -110,5 +119,19 @@ mod tests {
         let result = Ratio::from_parts(2, 0);
 
         assert!(result.is_err());
+    }
+
+    #[test]
+    fn ratio_to_value_f32() {
+        let ratio = Ratio::from_parts(7.0f32, 10.0f32).unwrap();
+
+        assert_eq!(ratio.to_value(), 0.7f32);
+    }
+
+    #[test]
+    fn ratio_to_value_f64() {
+        let ratio = Ratio::from_parts(7.0f64, 10.0f64).unwrap();
+
+        assert_eq!(ratio.to_value(), 0.7f64);
     }
 }

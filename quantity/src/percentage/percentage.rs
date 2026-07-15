@@ -1,8 +1,8 @@
-use std::fmt::{write, Display, Formatter};
 use crate::percentage::PercentageError;
 use crate::Ratio;
 use b3_core::validate::Validate;
 use b3_math::algebra::Zero;
+use std::fmt::{Display, Formatter};
 
 /**
  * 百分率による表現
@@ -51,29 +51,37 @@ where
     }
 }
 
-impl<T> Percentage<T> {
-    /// Percentage -> percent value.
-    pub fn to_percent(&self) -> T {
-        todo!()
-    }
-
-    /// Percentage -> ratio value ([0,1] etc.)
-    pub fn to_ratio(&self) -> T {
-        todo!()
-    }
+macro_rules! impl_percent_eval {
+    ($($t:ty => $hundred:expr),* $(,)?) => {$(
+        impl Percentage<$t> {
+            pub fn to_percent(&self) -> $t { self.to_ratio() * $hundred }
+            pub fn to_ratio(&self) -> $t { self.ratio.to_value() }
+        }
+    )*};
 }
 
-impl Display for Percentage<f64> {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}%", self.to_percent())
-    }
+impl_percent_eval!(
+    f32 => 100.0f32,
+    f64 => 100.0f64,
+);
+
+macro_rules! impl_percent_display {
+    ($($t:ty),* $(,)?) => {$(
+        impl Display for Percentage<$t> {
+            fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+                write!(f, "{}%", self.to_percent())
+            }
+        }
+    )*};
 }
+
+impl_percent_display!(f64, f32);
 
 #[cfg(test)]
 mod tests {
-    use b3_core::validate::Validate;
     use crate::Percentage;
     use crate::Ratio;
+    use b3_core::validate::Validate;
 
     #[test]
     fn percentage_try_new_ok() {
@@ -137,5 +145,33 @@ mod tests {
         let percentage = Percentage::new(ratio);
 
         assert_eq!(percentage.ratio(), &ratio);
+    }
+
+    #[test]
+    fn percentage_to_percent_f32() {
+        let p = Percentage::from_parts(7.0f32, 10.0f32).unwrap();
+
+        assert_eq!(p.to_percent(), 70.0f32);
+    }
+
+    #[test]
+    fn percentage_to_percent_f64() {
+        let p = Percentage::from_parts(7.0f64, 10.0f64).unwrap();
+
+        assert_eq!(p.to_percent(), 70.0f64);
+    }
+
+    #[test]
+    fn percentage_display_f32() {
+        let p = Percentage::from_parts(7.0f32, 10.0f32).unwrap();
+
+        assert_eq!(format!("{}", p), "70%");
+    }
+
+    #[test]
+    fn percentage_display_f64() {
+        let p = Percentage::from_parts(7.0f64, 10.0f64).unwrap();
+
+        assert_eq!(format!("{}", p), "70%");
     }
 }
