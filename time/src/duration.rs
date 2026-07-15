@@ -1,6 +1,5 @@
 use b3_core::error::Result;
 use b3_core::validate::Validate;
-use b3_math::algebra::Zero;
 use crate::error::DurationError;
 
 pub struct Duration<T> {
@@ -18,10 +17,7 @@ impl<T> Duration<T> {
     pub fn into_inner(self) -> T { self.value }
 }
 
-impl<T> Duration<T>
-where
-    T: Zero,
-{
+impl<T> Duration<T> {
     pub fn try_new(value: T) -> Result<Self, DurationError> {
         let duration = Duration { value };
         duration.validate()?;

@@ -1,5 +1,5 @@
+use std::fmt::{Display, Formatter};
 use b3_core::validate::Validate;
-use b3_math::algebra::Zero;
 use crate::error::InstantError;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -13,15 +13,16 @@ impl<T> Instant<T> {
         Self { value }
     }
 
+    pub(crate) fn from_trusted(value: T) -> Self {
+        Self { value }
+    }
+
     pub fn timestamp(&self) -> &T { &self.value }
     pub fn timestamp_mut(&mut self) -> &mut T { &mut self.value }
     pub fn into_timestamp(self) -> T { self.value }
 }
 
-impl<T> Instant<T>
-where
-    T: Zero,
-{
+impl<T> Instant<T> {
     pub fn try_new(value: T) -> Result<Self, InstantError> {
         let instant = Self { value };
         instant.validate()?;
@@ -34,6 +35,15 @@ impl<T> Validate for Instant<T> {
 
     fn validate(&self) -> b3_core::error::Result<(), Self::Error> {
         Ok(())
+    }
+}
+
+impl<T> Display for Instant<T>
+where
+    T: Display,
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.timestamp())
     }
 }
 
