@@ -140,4 +140,19 @@ mod tests {
 
         assert_eq!(ratio.to_value(), 0.7f64);
     }
+
+    #[test]
+    fn ratio_parts() {
+        let ratio = Ratio::from_parts(7, 10).unwrap();
+
+        assert_eq!(ratio.left(), &7);
+        assert_eq!(ratio.right(), &10);
+    }
+
+    #[test]
+    fn ratio_into_parts() {
+        let ratio = Ratio::from_parts(7, 10).unwrap();
+
+        assert_eq!(ratio.into_parts(), (7, 10));
+    }
 }
