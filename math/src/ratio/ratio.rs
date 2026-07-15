@@ -1,7 +1,7 @@
-use crate::rational::{Fraction, FractionError};
 use b3_core::error::Result;
 use b3_core::validate::Validate;
 use crate::algebra::Zero;
+use crate::number::{Fraction, FractionError};
 use crate::ratio::error::RatioError;
 
 /**

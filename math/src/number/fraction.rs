@@ -3,8 +3,8 @@ use std::ops::{Add, Div, Mul, Sub};
 use b3_core::error::Result;
 use b3_core::validate::Validate;
 use crate::algebra::{MultiplicativeInverse, One, Zero};
+use crate::number::FractionError;
 use crate::number::gcd::GreatestCommonDivisor;
-use crate::rational::error::FractionError;
 
 /**
  * 分子・分母による有理数の表現。
@@ -179,8 +179,7 @@ where
 mod tests {
     use b3_core::validate::Validate;
     use crate::algebra::MultiplicativeInverse;
-    use crate::rational::error::FractionError;
-    use crate::rational::Fraction;
+    use crate::number::{Fraction, FractionError};
 
     #[test]
     fn fraction_validate_ok() {
