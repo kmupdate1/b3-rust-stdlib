@@ -44,7 +44,6 @@ impl<T> Percentage<T>
 where
     T: Zero,
 {
-    pub fn from_percent(value: T) -> Self { todo!() }
     pub fn from_parts(compared: T, base: T) -> Result<Self, PercentageError> {
         let ratio = Ratio::from_parts(compared, base)?;
         Self::try_new(ratio)
@@ -56,6 +55,10 @@ macro_rules! impl_percent_eval {
         impl Percentage<$t> {
             pub fn to_percent(&self) -> $t { self.to_ratio() * $hundred }
             pub fn to_ratio(&self) -> $t { self.ratio.to_value() }
+            pub fn from_percent(value: $t) -> Result<Self, PercentageError> {
+                let ratio = Ratio::from_parts(value, $hundred)?;
+                Self::try_new(ratio)
+            }
         }
     )*};
 }
@@ -159,6 +162,22 @@ mod tests {
         let p = Percentage::from_parts(7.0f64, 10.0f64).unwrap();
 
         assert_eq!(p.to_percent(), 70.0f64);
+    }
+
+    #[test]
+    fn percentage_from_percent_f32() {
+        let percentage = Percentage::<f32>::from_percent(70.0f32).unwrap();
+
+        assert_eq!(percentage.to_ratio(), 0.7f32);
+        assert_eq!(percentage.to_percent(), 70.0f32);
+    }
+
+    #[test]
+    fn percentage_from_percent_f64() {
+        let percentage = Percentage::<f64>::from_percent(70.0f64).unwrap();
+
+        assert_eq!(percentage.to_ratio(), 0.7f64);
+        assert_eq!(percentage.to_percent(), 70.0f64);
     }
 
     #[test]
