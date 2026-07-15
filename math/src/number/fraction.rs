@@ -175,6 +175,16 @@ where
     }
 }
 
+macro_rules! impl_fraction_eval {
+    ($($t:ty),* $(,)?) => {$(
+        impl Fraction<$t> {
+            pub fn to_rational(&self) -> $t { self.numerator / self.denominator }
+        }
+    )*};
+}
+
+impl_fraction_eval!(f32, f64);
+
 #[cfg(test)]
 mod tests {
     use b3_core::validate::Validate;
@@ -355,5 +365,33 @@ mod tests {
 
         assert_eq!(c.numerator(), &1);
         assert_eq!(c.denominator(), &6);
+    }
+
+    #[test]
+    fn fraction_to_rational_f32() {
+        let fraction = Fraction::new(1.0f32, 2.0f32);
+
+        assert_eq!(fraction.to_rational(), 0.5f32);
+    }
+
+    #[test]
+    fn fraction_to_rational_f64() {
+        let fraction = Fraction::new(1.0f64, 2.0f64);
+
+        assert_eq!(fraction.to_rational(), 0.5f64);
+    }
+
+    #[test]
+    fn fraction_to_rational_f32_integer() {
+        let fraction = Fraction::new(6.0f32, 3.0f32);
+
+        assert_eq!(fraction.to_rational(), 2.0f32);
+    }
+
+    #[test]
+    fn fraction_to_rational_f64_integer() {
+        let fraction = Fraction::new(6.0f64, 3.0f64);
+
+        assert_eq!(fraction.to_rational(), 2.0f64);
     }
 }

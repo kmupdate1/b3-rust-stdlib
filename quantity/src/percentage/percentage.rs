@@ -1,3 +1,4 @@
+use std::fmt::{write, Display, Formatter};
 use crate::percentage::PercentageError;
 use crate::Ratio;
 use b3_core::validate::Validate;
@@ -59,6 +60,12 @@ impl<T> Percentage<T> {
     /// Percentage -> ratio value ([0,1] etc.)
     pub fn to_ratio(&self) -> T {
         todo!()
+    }
+}
+
+impl Display for Percentage<f64> {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}%", self.to_percent())
     }
 }
 
