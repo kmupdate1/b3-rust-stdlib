@@ -19,6 +19,9 @@ impl<T> Ratio<T> {
         Self { fraction }
     }
 
+    // TODO:
+    // Consider hiding Fraction from the public API.
+    // Fraction is currently an implementation detail.
     pub fn fraction(&self) -> &Fraction<T> { &self.fraction }
     pub fn fraction_mut(&mut self) -> &mut Fraction<T> { &mut self.fraction }
     pub fn into_fraction(self) -> Fraction<T> { self.fraction }
