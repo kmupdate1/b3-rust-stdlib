@@ -1,4 +1,4 @@
-use b3_math::ratio::Ratio;
+use crate::Ratio;
 
 /**
  * 全体に対する割合を表す。
