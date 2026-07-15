@@ -1,61 +1,35 @@
 use crate::algebra::Remainder;
 
-impl Remainder for i8 {
-    type Output = i8;
-    fn remainder(&self, rhs: Self) -> Self::Output { self % rhs }
+macro_rules! impl_remainder {
+    ($($t:ty),* $(,)?) => {$(
+        impl Remainder<Self> for $t {
+            type Output = Self;
+            fn remainder(&self, rhs: Self) -> Self::Output { *self % rhs }
+        }
+    )*}
 }
 
-impl Remainder for i16 {
-    type Output = i16;
-    fn remainder(&self, rhs: Self) -> Self::Output { self % rhs }
-}
+impl_remainder!(
+    i8, i16, i32, i64, i128, isize,
+    u8, u16, u32, u64, u128, usize,
+);
 
-impl Remainder for i32 {
-    type Output = i32;
-    fn remainder(&self, rhs: Self) -> Self::Output { self % rhs }
-}
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-impl Remainder for i64 {
-    type Output = i64;
-    fn remainder(&self, rhs: Self) -> Self::Output { self % rhs }
-}
+    #[test]
+    fn remainder_i32() {
+        assert_eq!(7i32.remainder(2), 1);
+    }
 
-impl Remainder for i128 {
-    type Output = i128;
-    fn remainder(&self, rhs: Self) -> Self::Output { self % rhs }
-}
+    #[test]
+    fn remainder_u32() {
+        assert_eq!(8u32.remainder(2), 0);
+    }
 
-impl Remainder for isize {
-    type Output = isize;
-    fn remainder(&self, rhs: Self) -> Self::Output { self % rhs }
-}
-
-impl Remainder for u8 {
-    type Output = u8;
-    fn remainder(&self, rhs: Self) -> Self::Output { self % rhs }
-}
-
-impl Remainder for u16 {
-    type Output = u16;
-    fn remainder(&self, rhs: Self) -> Self::Output { self % rhs }
-}
-
-impl Remainder for u32 {
-    type Output = u32;
-    fn remainder(&self, rhs: Self) -> Self::Output { self % rhs }
-}
-
-impl Remainder for u64 {
-    type Output = u64;
-    fn remainder(&self, rhs: Self) -> Self::Output { self % rhs }
-}
-
-impl Remainder for u128 {
-    type Output = u128;
-    fn remainder(&self, rhs: Self) -> Self::Output { self % rhs }
-}
-
-impl Remainder for usize {
-    type Output = usize;
-    fn remainder(&self, rhs: Self) -> Self::Output { self % rhs }
+    #[test]
+    fn remainder_negative() {
+        assert_eq!((-7i32).remainder(2), -1);
+    }
 }
