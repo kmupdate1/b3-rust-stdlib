@@ -19,9 +19,15 @@ impl<T> Ratio<T> {
         Self { fraction }
     }
 
+    // TODO:
+    // Consider hiding Fraction from the public API.
+    // Fraction is currently an implementation detail.
     pub fn fraction(&self) -> &Fraction<T> { &self.fraction }
     pub fn fraction_mut(&mut self) -> &mut Fraction<T> { &mut self.fraction }
     pub fn into_fraction(self) -> Fraction<T> { self.fraction }
+    pub fn left(&self) -> &T { self.fraction.numerator() }
+    pub fn right(&self) -> &T { self.fraction.denominator() }
+    pub fn into_parts(self) -> (T, T) { self.fraction.into_parts() }
 }
 
 impl<T> Ratio<T>
@@ -133,5 +139,20 @@ mod tests {
         let ratio = Ratio::from_parts(7.0f64, 10.0f64).unwrap();
 
         assert_eq!(ratio.to_value(), 0.7f64);
+    }
+
+    #[test]
+    fn ratio_parts() {
+        let ratio = Ratio::from_parts(7, 10).unwrap();
+
+        assert_eq!(ratio.left(), &7);
+        assert_eq!(ratio.right(), &10);
+    }
+
+    #[test]
+    fn ratio_into_parts() {
+        let ratio = Ratio::from_parts(7, 10).unwrap();
+
+        assert_eq!(ratio.into_parts(), (7, 10));
     }
 }
