@@ -26,6 +26,7 @@ name = "b3-quantity"
 version = "0.1.0"
 dependencies = [
  "b3-core",
+ "b3-math",
 ]
 
 [[package]]

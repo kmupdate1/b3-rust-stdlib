@@ -4,4 +4,5 @@ version.workspace = true
 edition.workspace = true
 
 [dependencies]
-b3-core = { package = "b3-core", path = "../core" }
+b3-core = { path = "../core" }
+b3-math = { path = "../math" }
