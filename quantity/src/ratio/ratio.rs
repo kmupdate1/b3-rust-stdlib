@@ -34,6 +34,8 @@ where
         Ok(ratio)
     }
 
+    // 存在意義を考慮して、今後削除するか検討中。
+    #[deprecated(since = "0.2.0", note = "considering to deletion")]
     pub fn from_fraction(fraction: Fraction<T>) -> Result<Self, RatioError> {
         Self::try_new(fraction)
     }
@@ -51,6 +53,7 @@ impl<T> Validate for Ratio<T> {
     type Error = RatioError;
 
     fn validate(&self) -> Result<(), Self::Error> {
+        /// TODO:
         /// A. Nothing
         /// B. Must not be NaN
         /// C. Must not be Infinite
@@ -79,5 +82,33 @@ mod tests {
         let ratio = Ratio::new(fraction);
 
         assert_eq!(ratio.validate(), Ok(()));
+    }
+
+    #[test]
+    fn ratio_from_fraction() {
+        let fraction = Fraction::new(2, 1);
+
+        let ratio = Ratio::from_fraction(fraction);
+
+        assert!(ratio.is_ok());
+    }
+
+    #[test]
+    fn ratio_from_parts() {
+        let ratio = Ratio::from_parts(2, 1);
+
+        assert!(ratio.is_ok());
+
+        let ratio = ratio.unwrap();
+
+        assert_eq!(ratio.fraction().numerator(), &2);
+        assert_eq!(ratio.fraction().denominator(), &1);
+    }
+
+    #[test]
+    fn ratio_from_parts_zero_denominator() {
+        let result = Ratio::from_parts(2, 0);
+
+        assert!(result.is_err());
     }
 }
