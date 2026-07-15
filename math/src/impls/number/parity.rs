@@ -39,4 +39,9 @@ mod tests {
     fn parity_negative_odd() {
         assert_eq!((-3i32).parity(), Parity::Odd);
     }
+
+    #[test]
+    fn parity_zero() {
+        assert_eq!(0u32.parity(), Parity::Even);
+    }
 }

@@ -32,4 +32,9 @@ mod tests {
     fn remainder_negative() {
         assert_eq!((-7i32).remainder(2), -1);
     }
+
+    #[test]
+    fn remainder_zero() {
+        assert_eq!(8u32.remainder(2), 0);
+    }
 }
