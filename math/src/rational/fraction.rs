@@ -1,5 +1,5 @@
 use core::mem::swap;
-use std::ops::Div;
+use std::ops::{Add, Div, Mul, Sub};
 use b3_core::error::Result;
 use b3_core::validate::Validate;
 use crate::algebra::{MultiplicativeInverse, One, Zero};
@@ -112,6 +112,66 @@ where
         let mut fraction = self.clone();
         fraction.reduce();
         fraction
+    }
+}
+
+impl<T> Mul for Fraction<T>
+where
+    T: Mul<Output = T>,
+{
+    type Output = Self;
+
+    fn mul(self, rhs: Self) -> Self::Output {
+        Self {
+            numerator: self.numerator * rhs.numerator,
+            denominator: self.denominator * rhs.denominator,
+        }
+    }
+}
+
+impl<T> Div for Fraction<T>
+where
+    T: Zero + Clone + Mul<Output = T>,
+{
+    type Output = Result<Self, FractionError>;
+
+    fn div(self, rhs: Self) -> Self::Output {
+        let rhs = rhs.try_inverse()?;
+
+        Ok(Self {
+            numerator: self.numerator * rhs.numerator,
+            denominator: self.denominator * rhs.denominator,
+        })
+    }
+}
+
+impl<T> Add for Fraction<T>
+where
+    T: Add<Output = T> + Mul<Output = T> + Clone,
+{
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        Self {
+            numerator: self.numerator.clone() * rhs.denominator.clone()
+                + rhs.numerator.clone() * self.denominator.clone(),
+            denominator: self.denominator * rhs.denominator,
+        }
+    }
+}
+
+impl<T> Sub for Fraction<T>
+where
+    T: Sub<Output = T> + Mul<Output = T> + Clone,
+{
+    type Output = Self;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        Self {
+            numerator: self.numerator.clone() * rhs.denominator.clone()
+                - rhs.numerator.clone() * self.denominator.clone(),
+            denominator: self.denominator * rhs.denominator,
+        }
     }
 }
 
@@ -252,5 +312,49 @@ mod tests {
         let reduced = fraction.reduced();
 
         assert_eq!(reduced, fraction);
+    }
+
+    #[test]
+    fn fraction_mul() {
+        let a = Fraction::new(1, 2);
+        let b = Fraction::new(2, 3);
+
+        let c = a * b;
+
+        assert_eq!(c.numerator(), &2);
+        assert_eq!(c.denominator(), &6);
+    }
+
+    #[test]
+    fn fraction_div() {
+        let a = Fraction::new(1, 2);
+        let b = Fraction::new(2, 3);
+
+        let c = (a / b).unwrap();
+
+        assert_eq!(c.numerator(), &3);
+        assert_eq!(c.denominator(), &4);
+    }
+
+    #[test]
+    fn fraction_add() {
+        let a = Fraction::new(1, 2);
+        let b = Fraction::new(1, 3);
+
+        let c = a + b;
+
+        assert_eq!(c.numerator(), &5);
+        assert_eq!(c.denominator(), &6);
+    }
+
+    #[test]
+    fn fraction_sub() {
+        let a = Fraction::new(1, 2);
+        let b = Fraction::new(1, 3);
+
+        let c = a - b;
+
+        assert_eq!(c.numerator(), &1);
+        assert_eq!(c.denominator(), &6);
     }
 }
