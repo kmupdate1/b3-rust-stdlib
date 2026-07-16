@@ -19,7 +19,6 @@ impl<T> Rational<T> {
     }
 
     pub fn fraction(&self) -> &Fraction<T> { &self.fraction }
-    pub fn fraction_mut(&mut self) -> &mut Fraction<T> { &mut self.fraction }
     pub fn into_fraction(self) -> Fraction<T> { self.fraction }
 }
 
