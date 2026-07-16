@@ -1,3 +1,4 @@
+use std::fmt::{Display, Formatter};
 use b3_core::validate::Validate;
 use crate::algebra::{Add, Sub, Mul, Div, Neg, Zero, AdditiveInverse, MultiplicativeInverse};
 use crate::number::RealError;
@@ -101,6 +102,15 @@ impl<T> MultiplicativeInverse for Real<T> {
     }
     fn try_invert(&mut self) -> b3_core::error::Result<(), Self::Error> {
         todo!()
+    }
+}
+
+impl<T> Display for Real<T>
+where
+    T: Display,
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.value)
     }
 }
 

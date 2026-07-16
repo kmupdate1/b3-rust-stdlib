@@ -1,5 +1,3 @@
-use std::cmp::PartialEq;
-
 /// Equality with tolerance.
 pub trait ApproximateEq<Rhs = Self> {
     type Tolerance;
