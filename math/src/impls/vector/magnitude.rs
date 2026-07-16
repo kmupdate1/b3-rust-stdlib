@@ -1,5 +1,4 @@
-use std::ops::{Add, Mul};
-use crate::algebra::{Sqrt, Zero};
+use crate::algebra::{Add, Mul, Sqrt, Zero};
 use crate::number::Magnitude;
 use crate::vector::Vector;
 

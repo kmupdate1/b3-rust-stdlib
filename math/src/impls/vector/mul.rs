@@ -1,4 +1,4 @@
-use std::ops::Mul;
+use crate::algebra::Mul;
 use crate::vector::Vector;
 
 impl<T, const N: usize> Mul<T> for Vector<T, N>

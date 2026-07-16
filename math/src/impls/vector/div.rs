@@ -1,4 +1,4 @@
-use std::ops::Div;
+use crate::algebra::Div;
 use crate::vector::Vector;
 
 impl<T, const N: usize> Div<T> for Vector<T, N>

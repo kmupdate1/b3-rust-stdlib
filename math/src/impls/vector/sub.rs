@@ -1,4 +1,4 @@
-use std::ops::Sub;
+use crate::algebra::Sub;
 use crate::vector::Vector;
 
 impl<T, const N: usize> Sub for Vector<T, N>

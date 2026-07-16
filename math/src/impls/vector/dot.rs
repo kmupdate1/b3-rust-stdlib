@@ -1,5 +1,4 @@
-use std::ops::{Add, Mul};
-use crate::algebra::Zero;
+use crate::algebra::{Add, Mul, Zero};
 use crate::vector::Vector;
 
 impl<T, const N: usize> Vector<T, N>
