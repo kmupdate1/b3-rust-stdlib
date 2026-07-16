@@ -1,3 +1,4 @@
+use std::fmt::{Display, Formatter};
 use crate::ratio::error::RatioError;
 use b3_core::error::Result;
 use b3_core::validate::Validate;
@@ -76,6 +77,15 @@ macro_rules! impl_ratio_eval {
 }
 
 impl_ratio_eval!(f32, f64);
+
+impl<T> Display for Ratio<T>
+where
+    T: Display,
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}:{}", self.fraction.numerator(), self.fraction.denominator())
+    }
+}
 
 #[cfg(test)]
 mod tests {
