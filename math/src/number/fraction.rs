@@ -1,4 +1,5 @@
 use core::mem::swap;
+use std::fmt::{Display, Formatter};
 use std::ops::{Add, Div, Mul, Sub};
 use b3_core::error::Result;
 use b3_core::validate::Validate;
@@ -172,6 +173,15 @@ where
                 - rhs.numerator.clone() * self.denominator.clone(),
             denominator: self.denominator * rhs.denominator,
         }
+    }
+}
+
+impl<T> Display for Fraction<T>
+where
+    T: Display,
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}/{}", self.numerator, self.denominator)
     }
 }
 
