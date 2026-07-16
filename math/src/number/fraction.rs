@@ -1,11 +1,11 @@
-use core::mem::swap;
-use std::fmt::{Display, Formatter};
-use std::ops::{Add, Div, Mul, Sub};
+use crate::algebra::{AdditiveInverse, MultiplicativeInverse, One, Zero};
+use crate::number::gcd::GreatestCommonDivisor;
+use crate::number::FractionError;
 use b3_core::error::Result;
 use b3_core::validate::Validate;
-use crate::algebra::{MultiplicativeInverse, One, Zero};
-use crate::number::FractionError;
-use crate::number::gcd::GreatestCommonDivisor;
+use core::mem::swap;
+use std::fmt::{Display, Formatter};
+use std::ops::{Add, Div, Mul, Neg, Sub};
 
 /**
  * 分子・分母による有理数の表現。
@@ -36,6 +36,22 @@ where
         let fraction = Fraction { numerator, denominator };
         fraction.validate()?;
         Ok(fraction)
+    }
+}
+
+impl<T> AdditiveInverse for Fraction<T>
+where
+    T: Neg<Output = T> + Clone,
+{
+    fn inverse(&self) -> Self {
+        Self {
+            numerator: -self.numerator.clone(),
+            denominator: self.denominator.clone(),
+        }
+    }
+
+    fn invert(&mut self) {
+        self.numerator = -self.numerator.clone();
     }
 }
 
@@ -197,9 +213,9 @@ impl_fraction_eval!(f32, f64);
 
 #[cfg(test)]
 mod tests {
-    use b3_core::validate::Validate;
     use crate::algebra::MultiplicativeInverse;
     use crate::number::{Fraction, FractionError};
+    use b3_core::validate::Validate;
 
     #[test]
     fn fraction_validate_ok() {
