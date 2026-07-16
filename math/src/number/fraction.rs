@@ -63,7 +63,7 @@ where
 
 impl<T> Validate for  Fraction<T>
 where
-    T: Zero + PartialEq,
+    T: Zero,
 {
     type Error = FractionError;
 
