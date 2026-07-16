@@ -19,7 +19,7 @@ use b3_core::error::Result;
 
 pub trait AdditiveInverse {
     fn inverse(&self) -> Self;
-    // fn invert(&mut self);
+    fn invert(&mut self);
 }
 
 pub trait MultiplicativeInverse {
