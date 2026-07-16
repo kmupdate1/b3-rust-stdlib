@@ -1,4 +1,5 @@
 use std::fmt::{Display, Formatter};
+use std::ops::Neg;
 use b3_core::error::Result;
 use b3_core::validate::Validate;
 use crate::algebra::{Add, Sub, Mul, Div, Zero, AdditiveInverse, MultiplicativeInverse, One};
@@ -94,14 +95,15 @@ where
     }
 }
 
-impl<T> AdditiveInverse for Rational<T> {
+impl<T> AdditiveInverse for Rational<T>
+where
+    T: Neg<Output = T> + Clone,
+{
     fn inverse(&self) -> Self {
-        todo!()
+        Self { fraction: self.fraction.inverse() }
     }
 
-    fn invert(&mut self) {
-        todo!()
-    }
+    fn invert(&mut self) { self.fraction.invert(); }
 }
 
 impl<T> MultiplicativeInverse for Rational<T>
