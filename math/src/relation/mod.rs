@@ -2,6 +2,7 @@
  * 数学的関係
  */
 
-mod ordering;
+mod equality;
 
-pub use ordering::Ordering;
+pub use equality::*;
+pub use std::cmp::{Ord, Ordering, Eq, PartialEq, PartialOrd};

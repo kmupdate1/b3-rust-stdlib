@@ -1,5 +1,5 @@
 use b3_core::validate::Validate;
-use crate::algebra::Zero;
+use crate::algebra::{Add, Sub, Mul, Div, Neg, Zero, AdditiveInverse, MultiplicativeInverse};
 use crate::number::RealError;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -39,6 +39,71 @@ where
     }
 }
 
+impl<T> Add for Real<T>
+where
+    T: Add<Output = T>,
+{
+    type Output = Self;
+    fn add(self, rhs: Self) -> Self::Output {
+        Self { value: self.value + rhs.value }
+    }
+}
+
+impl<T> Sub for Real<T>
+where
+    T: Sub<Output = T>,
+{
+    type Output = Self;
+    fn sub(self, rhs: Self) -> Self::Output { todo!() }
+}
+
+impl<T> Mul for Real<T>
+where
+    T: Mul<Output = T>,
+{
+    type Output = Self;
+    fn mul(self, rhs: Self) -> Self::Output {
+        todo!()
+    }
+}
+
+impl<T> Div for Real<T>
+where
+    T: Div<Output = T>,
+{
+    type Output = Self;
+    fn div(self, rhs: Self) -> Self::Output {
+        todo!()
+    }
+}
+
+impl<T> Neg for Real<T>
+where
+    T: Neg<Output = T>,
+{
+    type Output = Self;
+    fn neg(self) -> Self::Output {
+        todo!()
+    }
+}
+
+impl<T> AdditiveInverse for Real<T> {
+    fn inverse(&self) -> Self { todo!() }
+    fn invert(&mut self) { todo!() }
+}
+
+impl<T> MultiplicativeInverse for Real<T> {
+    type Output = Self;
+    type Error = RealError;
+
+    fn try_inverse(&self) -> b3_core::error::Result<Self::Output, Self::Error> {
+        todo!()
+    }
+    fn try_invert(&mut self) -> b3_core::error::Result<(), Self::Error> {
+        todo!()
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -69,5 +134,16 @@ mod tests {
         let real = Real::new(3.14);
 
         assert_eq!(real.validate(), Ok(()));
+    }
+
+    #[test]
+    fn real_add_f32() {
+        let real_pi = Real::new(3.14f32);
+        let real_napier = Real::new(2.71f32);
+
+        let res = real_pi.add(real_napier);
+
+        assert_ne!(res.value(), &5.85f32);
+        assert_ne!(res.value().to_bits(), 5.85f32.to_bits());
     }
 }
