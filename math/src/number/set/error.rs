@@ -13,4 +13,10 @@ impl From<FractionError> for RationalError {
 pub enum RealError {}
 
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub enum ComplexError {}
+pub enum ComplexError {
+    Real(RealError),
+}
+
+impl From<RealError> for ComplexError {
+    fn from(e: RealError) -> ComplexError { Self::Real(e) }
+}

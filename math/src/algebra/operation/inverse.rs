@@ -1,13 +1,4 @@
 /**
- * Inverse:
- *
- * Algebraic inverse.
- *
- * This trait represents an inverse operation in an algebraic structure.
- *
- * Current implementations provide the additive inverse.
- * Multiplicative inverses may be introduced in the future as a separate trait.
- *
  * Additive inverse:
  * a + (-a) = 0
  *
@@ -19,7 +10,7 @@ use b3_core::error::Result;
 
 pub trait AdditiveInverse {
     fn inverse(&self) -> Self;
-    // fn invert(&mut self);
+    fn invert(&mut self);
 }
 
 pub trait MultiplicativeInverse {

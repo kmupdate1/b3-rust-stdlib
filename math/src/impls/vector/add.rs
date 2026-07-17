@@ -1,5 +1,5 @@
+use crate::algebra::Add;
 use crate::vector::Vector;
-use std::ops::Add;
 
 impl<T, const N: usize> Add for Vector<T, N>
 where
