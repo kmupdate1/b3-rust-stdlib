@@ -1,11 +1,10 @@
-use crate::algebra::{Add, AdditiveInverse, Div, Mul, MultiplicativeInverse, One, Sub, Zero};
+use crate::algebra::{Add, AdditiveInverse, Div, Mul, MultiplicativeInverse, Neg, One, Sub, Zero};
 use crate::number::gcd::GreatestCommonDivisor;
 use crate::number::set::error::RationalError;
 use crate::number::Fraction;
 use b3_core::error::Result;
 use b3_core::validate::Validate;
 use std::fmt::{Display, Formatter};
-use std::ops::Neg;
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Rational<T> {
