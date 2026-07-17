@@ -43,6 +43,16 @@ where
 
         Self::try_new(fraction)
     }
+
+    pub fn one() -> Self {
+        Self {
+            fraction: Fraction {
+                numerator: One::one(),
+                denominator: One::one()
+            }
+        }
+    }
+
     pub(crate) fn from_fraction(fraction: Fraction<T>) -> Self {
         Rational { fraction: fraction.reduced() }
     }

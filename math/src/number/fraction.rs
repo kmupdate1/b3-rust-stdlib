@@ -15,8 +15,8 @@ pub struct Fraction<T>
 where
     T: Integer,
 {
-    numerator: T,
-    denominator: T,
+    pub(crate) numerator: T,
+    pub(crate) denominator: T,
 }
 
 impl<T> Fraction<T>
