@@ -131,4 +131,11 @@ mod tests {
 
         assert_eq!(ratio.into_parts(), (7, 10));
     }
+
+    #[test]
+    fn ratio_display() {
+        let ratio = Ratio::from_parts(16, 9).unwrap();
+
+        assert_eq!(format!("{}", ratio), "16:9");
+    }
 }
