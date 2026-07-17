@@ -98,9 +98,7 @@ where
     + Div<Output = T> + One + GreatestCommonDivisor,
 {
     type Output = Result<Self, RationalError>;
-    fn div(self, rhs: Self) -> Self::Output {
-        Ok(self * rhs.try_inverse()?)
-    }
+    fn div(self, rhs: Self) -> Self::Output { Ok(self * rhs.try_inverse()?) }
 }
 
 impl<T> AdditiveInverse for Rational<T>
