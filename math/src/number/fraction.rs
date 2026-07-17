@@ -1,11 +1,10 @@
-use crate::algebra::{AdditiveInverse, MultiplicativeInverse, One, Zero};
+use crate::algebra::{Add, AdditiveInverse, Div, Mul, MultiplicativeInverse, Neg, One, Sub, Zero};
 use crate::number::gcd::GreatestCommonDivisor;
 use crate::number::FractionError;
 use b3_core::error::Result;
 use b3_core::validate::Validate;
 use core::mem::swap;
 use std::fmt::{Display, Formatter};
-use std::ops::{Add, Div, Mul, Neg, Sub};
 
 /**
  * 分子・分母による有理数の表現。
