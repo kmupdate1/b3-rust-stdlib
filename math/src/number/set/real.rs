@@ -2,7 +2,7 @@ use crate::algebra::{Add, AdditiveInverse, Div, Mul, MultiplicativeInverse, One,
 use crate::number::gcd::GreatestCommonDivisor;
 use crate::number::{Integer, Rational, RealError};
 use b3_core::validate::Validate;
-use std::fmt::{Display, Formatter, Pointer};
+use std::fmt::{Display, Formatter};
 
 #[derive(Clone, PartialEq)]
 enum Constant<T: Integer> {
