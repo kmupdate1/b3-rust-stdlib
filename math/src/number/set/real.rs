@@ -1,7 +1,7 @@
-use std::fmt::{Display, Formatter};
-use b3_core::validate::Validate;
-use crate::algebra::{Add, Sub, Mul, Div, Neg, Zero, AdditiveInverse, MultiplicativeInverse};
+use crate::algebra::{Add, AdditiveInverse, Div, Mul, MultiplicativeInverse, Neg, Sub, Zero};
 use crate::number::RealError;
+use b3_core::validate::Validate;
+use std::fmt::{Display, Formatter};
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Real<T> {
