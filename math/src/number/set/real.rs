@@ -1,6 +1,7 @@
 use crate::algebra::{Add, AdditiveInverse, Div, Mul, MultiplicativeInverse, One, Sub, Zero};
 use crate::number::gcd::GreatestCommonDivisor;
 use crate::number::{Integer, Rational, RealError};
+use b3_core::error::Result;
 use b3_core::validate::Validate;
 use std::fmt::{Display, Formatter};
 
@@ -36,7 +37,7 @@ enum Expression<T: Integer> {
     },
 }
 
-#[derive(PartialEq)]
+#[derive(Clone, PartialEq)]
 pub struct Real<T>
 where
     T: Integer,
@@ -149,7 +150,7 @@ where
 {
     type Error = RealError;
 
-    fn validate(&self) -> b3_core::error::Result<(), Self::Error> {
+    fn validate(&self) -> Result<(), Self::Error> {
         Ok(())
     }
 }
@@ -224,7 +225,7 @@ where
     type Output = Self;
     type Error = RealError;
 
-    fn try_inverse(&self) -> b3_core::error::Result<Self::Output, Self::Error> {
+    fn try_inverse(&self) -> Result<Self::Output, Self::Error> {
         Ok(Self {
             expr: Expression::Binary {
                 op: BinaryOperator::Div,
@@ -235,7 +236,7 @@ where
             }
         })
     }
-    fn try_invert(&mut self) -> b3_core::error::Result<(), Self::Error> {
+    fn try_invert(&mut self) -> Result<(), Self::Error> {
         *self = self.try_inverse()?;
         Ok(())
     }
