@@ -74,13 +74,11 @@ where
 
 impl<T> Sub for Rational<T>
 where
-    T: Integer + Sub<Output = T> + Mul<Output = T> + Clone
+    T: Integer + Add<Output = T> + Mul<Output = T> + Neg<Output = T> + Clone
     + Div<Output = T> + Zero + One + GreatestCommonDivisor,
 {
     type Output = Self;
-    fn sub(self, rhs: Self) -> Self::Output {
-        Self::from_fraction(self.fraction - rhs.fraction)
-    }
+    fn sub(self, rhs: Self) -> Self::Output { self + rhs.inverse() }
 }
 
 impl<T> Mul for Rational<T>
