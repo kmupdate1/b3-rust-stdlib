@@ -38,6 +38,9 @@ where
 
         Self::try_new(fraction)
     }
+    pub(crate) fn from_reduced(fraction: Fraction<T>) -> Self {
+        Rational { fraction: fraction.reduced() }
+    }
 }
 
 impl<T> Validate for Rational<T>
@@ -47,49 +50,56 @@ where
     type Error = RationalError;
 
     fn validate(&self) -> Result<(), Self::Error> {
-        Ok(())
+        self.fraction
+            .validate()
+            .map_err(RationalError::from)
     }
 }
 
 impl<T> Add for Rational<T>
 where
-    T: Add<Output = T> + Mul<Output = T> + Clone,
+    T: Add<Output = T> + Mul<Output = T> + Clone
+    + Div<Output = T> + Zero + One + GreatestCommonDivisor,
 {
     type Output = Self;
     fn add(self, rhs: Self) -> Self::Output {
-        Self { fraction: self.fraction + rhs.fraction }
+        Self::from_reduced(self.fraction + rhs.fraction)
     }
 }
 
 impl<T> Sub for Rational<T>
 where
-    T: Sub<Output = T> + Mul<Output = T> + Clone,
+    T: Sub<Output = T> + Mul<Output = T> + Clone
+    + Div<Output = T> + Zero + One + GreatestCommonDivisor,
 {
     type Output = Self;
     fn sub(self, rhs: Self) -> Self::Output {
-        Self { fraction: self.fraction - rhs.fraction }
+        Self::from_reduced(self.fraction - rhs.fraction)
     }
 }
 
 impl<T> Mul for Rational<T>
 where
-    T: Mul<Output = T>,
+    T: Mul<Output = T>
+    + Div<Output = T> + Zero + One + GreatestCommonDivisor + Clone,
 {
     type Output = Self;
     fn mul(self, rhs: Self) -> Self::Output {
-        Self { fraction: self.fraction * rhs.fraction }
+        Self::from_reduced(self.fraction * rhs.fraction)
     }
 }
 
 impl<T> Div for Rational<T>
 where
-    T: Zero + Clone + Mul<Output = T>,
+    T: Zero + Clone + Mul<Output = T>
+    + Div<Output = T> + One + GreatestCommonDivisor,
 {
     type Output = Result<Self, RationalError>;
     fn div(self, rhs: Self) -> Self::Output {
         Ok(Self {
             fraction: (self.fraction / rhs.fraction)
-                .map_err(RationalError::from)?,
+                .map_err(RationalError::from)?
+                .reduced(),
         })
     }
 }
@@ -191,5 +201,53 @@ mod tests {
         let rational = Rational::from_parts(7, 0);
 
         assert!(rational.is_err());
+    }
+
+    #[test]
+    fn rational_add_is_reduced() {
+        let a = Rational::from_parts(1, 2).unwrap();
+        let b = Rational::from_parts(1, 2).unwrap();
+
+        let c = a + b;
+
+        assert_eq!(format!("{}", c), "1/1");
+    }
+
+    #[test]
+    fn rational_mul_is_reduced() {
+        let a = Rational::from_parts(2, 3).unwrap();
+        let b = Rational::from_parts(3, 4).unwrap();
+
+        let c = a * b;
+
+        assert_eq!(format!("{}", c), "1/2");
+    }
+
+    #[test]
+    fn div() {
+        let lhs = Rational::from_parts(2, 3).unwrap();
+        let rhs = Rational::from_parts(4, 9).unwrap();
+
+        let result = (lhs / rhs).unwrap();
+
+        assert_eq!(result, Rational::from_parts(3, 2).unwrap());
+    }
+
+    #[test]
+    fn div_reduced() {
+        let lhs = Rational::from_parts(2, 3).unwrap();
+        let rhs = Rational::from_parts(8, 9).unwrap();
+
+        let result = (lhs / rhs).unwrap();
+
+        assert_eq!(result, Rational::from_parts(3, 4).unwrap());
+    }
+
+    #[test]
+    fn div_by_zero() {
+        let lhs = Rational::from_parts(1, 2).unwrap();
+        let rhs = Rational::from_parts(0, 1).unwrap();
+
+        assert!((lhs / rhs).is_err());
     }
 }
