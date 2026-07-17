@@ -29,8 +29,8 @@ macro_rules! impl_finite_for_float {
         $(impl Finite for $t {
             fn finiteness(&self) -> Finiteness {
                 if self.is_nan() { Finiteness::NaN }
-                else if self.is_finite() { Finiteness::Finite }
-                else { Finiteness::Infinite }
+                else if self.is_infinite() { Finiteness::Infinite }
+                else { Finiteness::Finite }
             }
         })*
     };
