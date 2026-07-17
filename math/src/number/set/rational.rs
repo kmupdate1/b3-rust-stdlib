@@ -45,6 +45,7 @@ where
     }
 
     pub fn one() -> Self {
+        // SAFETY: 1/1 is always a valid reduced rational.
         Self {
             fraction: Fraction {
                 numerator: One::one(),
