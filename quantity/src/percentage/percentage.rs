@@ -1,196 +1,125 @@
-use crate::percentage::PercentageError;
-use crate::Ratio;
-use b3_core::validate::Validate;
-use b3_math::algebra::Zero;
+use crate::{PercentageError, Proportion};
+use b3_core::error::Result;
+use b3_math::number::Integer;
 use std::fmt::{Display, Formatter};
 
-/**
- * 百分率による表現
- */
-
-#[derive(Clone, Copy, Debug, PartialEq)]
-pub struct Percentage<T> {
-    ratio: Ratio<T>,
+pub struct Percentage<T: Integer> {
+    proportion: Proportion<T>,
 }
 
-impl<T> Percentage<T> {
-    #[deprecated(since = "0.2.0", note = "use `try_new` instead")]
-    pub fn new(ratio: Ratio<T>) -> Self {
-        Self { ratio }
-    }
-
-    pub fn ratio(&self) -> &Ratio<T> { &self.ratio }
-    pub fn ratio_mut(&mut self) -> &mut Ratio<T> { &mut self.ratio }
-    pub fn into_ratio(self) -> Ratio<T> { self.ratio }
-}
-
-impl<T> Percentage<T> {
-    pub fn try_new(ratio: Ratio<T>) -> Result<Self, PercentageError> {
-        let percentage = Self { ratio };
-        percentage.validate()?;
-        Ok(percentage)
-    }
-}
-
-impl<T> Validate for Percentage<T> {
-    type Error = PercentageError;
-
-    fn validate(&self) -> Result<(), Self::Error> {
-        Ok(())
+impl<T> Percentage<T>
+where
+    T: Integer,
+{
+    pub fn proportion(&self) -> &Proportion<T> {
+        &self.proportion
     }
 }
 
 impl<T> Percentage<T>
 where
-    T: Zero,
+    T: Integer + PartialOrd,
 {
-    pub fn from_parts(compared: T, base: T) -> Result<Self, PercentageError> {
-        let ratio = Ratio::from_parts(compared, base)?;
-        Self::try_new(ratio)
+    pub fn from_parts(part: T, whole: T) -> Result<Self, PercentageError> {
+        let proportion = Proportion::from_parts(part, whole)?;
+
+        Ok(Self { proportion })
+    }
+
+    pub fn new(proportion: Proportion<T>) -> Self {
+        Self { proportion }
     }
 }
 
-macro_rules! impl_percent_eval {
-    ($($t:ty => $hundred:expr),* $(,)?) => {$(
-        impl Percentage<$t> {
-            pub fn to_percent(&self) -> $t { self.to_ratio() * $hundred }
-            pub fn to_ratio(&self) -> $t { self.ratio.to_value() }
-            pub fn from_percent(value: $t) -> Result<Self, PercentageError> {
-                let ratio = Ratio::from_parts(value, $hundred)?;
-                Self::try_new(ratio)
-            }
-        }
-    )*};
+impl<T> Percentage<T>
+where
+    T: Integer + Into<f64> + Copy,
+{
+    pub fn percent(&self) -> f64 {
+        self.proportion.ratio().to_f64() * 100.0
+    }
 }
 
-impl_percent_eval!(
-    f32 => 100.0f32,
-    f64 => 100.0f64,
-);
-
-macro_rules! impl_percent_display {
-    ($($t:ty),* $(,)?) => {$(
-        impl Display for Percentage<$t> {
-            fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-                write!(f, "{}%", self.to_percent())
-            }
-        }
-    )*};
+impl<T> Display for Percentage<T>
+where
+    T: Integer + Into<f64> + Copy,
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}%", self.percent())
+    }
 }
-
-impl_percent_display!(f64, f32);
 
 #[cfg(test)]
 mod tests {
     use crate::Percentage;
-    use crate::Ratio;
-    use b3_core::validate::Validate;
-
-    #[test]
-    fn percentage_try_new_ok() {
-        let ratio = Ratio::from_parts(7, 10).unwrap();
-
-        let percentage = Percentage::try_new(ratio);
-
-        assert!(percentage.is_ok());
-    }
-
-    #[test]
-    fn percentage_validate_ok() {
-        let ratio = Ratio::new(
-            b3_math::number::Fraction::new(7, 10)
-        );
-
-        let percentage = Percentage::new(ratio);
-
-        assert_eq!(percentage.validate(), Ok(()));
-    }
 
     #[test]
     fn percentage_from_parts() {
-        let percentage = Percentage::from_parts(7, 10);
+        let percentage = Percentage::from_parts(7, 10).unwrap();
 
-        assert!(percentage.is_ok());
-
-        let percentage = percentage.unwrap();
-
-        assert_eq!(
-            percentage.ratio().fraction().numerator(),
-            &7
-        );
-
-        assert_eq!(
-            percentage.ratio().fraction().denominator(),
-            &10
-        );
+        assert_eq!(percentage.percent(), 70.0);
     }
 
     #[test]
-    fn percentage_from_parts_zero_denominator() {
-        let percentage = Percentage::from_parts(7, 0);
+    fn percentage_display() {
+        let percentage = Percentage::from_parts(7, 10).unwrap();
 
-        assert!(percentage.is_err());
+        assert_eq!(format!("{}", percentage), "70%");
     }
 
     #[test]
-    fn percentage_into_ratio() {
-        let ratio = Ratio::from_parts(7, 10).unwrap();
+    fn percentage_zero() {
+        let percentage = Percentage::from_parts(0, 10).unwrap();
 
-        let percentage = Percentage::new(ratio);
-
-        assert_eq!(percentage.into_ratio(), ratio);
+        assert_eq!(percentage.percent(), 0.0);
     }
 
     #[test]
-    fn percentage_ratio() {
-        let ratio = Ratio::from_parts(7, 10).unwrap();
+    fn percentage_one_hundred() {
+        let percentage = Percentage::from_parts(10, 10).unwrap();
 
-        let percentage = Percentage::new(ratio);
-
-        assert_eq!(percentage.ratio(), &ratio);
+        assert_eq!(percentage.percent(), 100.0);
     }
 
     #[test]
-    fn percentage_to_percent_f32() {
-        let p = Percentage::from_parts(7.0f32, 10.0f32).unwrap();
+    fn percentage_half() {
+        let percentage = Percentage::from_parts(1, 2).unwrap();
 
-        assert_eq!(p.to_percent(), 70.0f32);
+        assert_eq!(percentage.percent(), 50.0);
     }
 
     #[test]
-    fn percentage_to_percent_f64() {
-        let p = Percentage::from_parts(7.0f64, 10.0f64).unwrap();
+    fn percentage_one_quarter() {
+        let percentage = Percentage::from_parts(1, 4).unwrap();
 
-        assert_eq!(p.to_percent(), 70.0f64);
+        assert_eq!(percentage.percent(), 25.0);
     }
 
     #[test]
-    fn percentage_from_percent_f32() {
-        let percentage = Percentage::<f32>::from_percent(70.0f32).unwrap();
+    fn percentage_three_quarters() {
+        let percentage = Percentage::from_parts(3, 4).unwrap();
 
-        assert_eq!(percentage.to_ratio(), 0.7f32);
-        assert_eq!(percentage.to_percent(), 70.0f32);
+        assert_eq!(percentage.percent(), 75.0);
     }
 
     #[test]
-    fn percentage_from_percent_f64() {
-        let percentage = Percentage::<f64>::from_percent(70.0f64).unwrap();
+    fn percentage_zero_denominator() {
+        let result = Percentage::from_parts(7, 0);
 
-        assert_eq!(percentage.to_ratio(), 0.7f64);
-        assert_eq!(percentage.to_percent(), 70.0f64);
+        assert!(result.is_err());
     }
 
     #[test]
-    fn percentage_display_f32() {
-        let p = Percentage::from_parts(7.0f32, 10.0f32).unwrap();
+    fn percentage_greater_than_one() {
+        let result = Percentage::from_parts(11, 10);
 
-        assert_eq!(format!("{}", p), "70%");
+        assert!(result.is_err());
     }
 
     #[test]
-    fn percentage_display_f64() {
-        let p = Percentage::from_parts(7.0f64, 10.0f64).unwrap();
+    fn percentage_negative() {
+        let result = Percentage::from_parts(-1, 10);
 
-        assert_eq!(format!("{}", p), "70%");
+        assert!(result.is_err());
     }
 }

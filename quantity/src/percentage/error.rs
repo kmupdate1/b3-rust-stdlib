@@ -2,9 +2,20 @@ use crate::RatioError;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum PercentageError {
-    Ratio(RatioError),
+    Proportion(ProportionError),
 }
 
-impl From<RatioError> for PercentageError {
+impl From<ProportionError> for PercentageError {
+    fn from(e: ProportionError) -> Self { Self::Proportion(e) }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum ProportionError {
+    Ratio(RatioError),
+    Negative,
+    GraterThenOne,
+}
+
+impl From<RatioError> for ProportionError {
     fn from(e: RatioError) -> Self { Self::Ratio(e) }
 }
