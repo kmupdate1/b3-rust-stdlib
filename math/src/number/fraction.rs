@@ -126,6 +126,30 @@ where
     }
 }
 
+impl<T> Add for Fraction<T>
+where
+    T: Integer + Add<Output = T> + Mul<Output = T> + Clone,
+{
+    type Output = Self;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        Self {
+            numerator: self.numerator.clone() * rhs.denominator.clone()
+                + rhs.numerator.clone() * self.denominator.clone(),
+            denominator: self.denominator * rhs.denominator,
+        }
+    }
+}
+
+impl<T> Sub for Fraction<T>
+where
+    T: Integer + Add<Output = T> + Mul<Output = T> + Neg<Output = T> + Clone,
+{
+    type Output = Self;
+
+    fn sub(self, rhs: Self) -> Self::Output { self + rhs.inverse() }
+}
+
 impl<T> Mul for Fraction<T>
 where
     T: Integer + Mul<Output = T>,
@@ -146,44 +170,7 @@ where
 {
     type Output = Result<Self, FractionError>;
 
-    fn div(self, rhs: Self) -> Self::Output {
-        let rhs = rhs.try_inverse()?;
-
-        Ok(Self {
-            numerator: self.numerator * rhs.numerator,
-            denominator: self.denominator * rhs.denominator,
-        })
-    }
-}
-
-impl<T> Add for Fraction<T>
-where
-    T: Integer + Add<Output = T> + Mul<Output = T> + Clone,
-{
-    type Output = Self;
-
-    fn add(self, rhs: Self) -> Self::Output {
-        Self {
-            numerator: self.numerator.clone() * rhs.denominator.clone()
-                + rhs.numerator.clone() * self.denominator.clone(),
-            denominator: self.denominator * rhs.denominator,
-        }
-    }
-}
-
-impl<T> Sub for Fraction<T>
-where
-    T: Integer + Sub<Output = T> + Mul<Output = T> + Clone,
-{
-    type Output = Self;
-
-    fn sub(self, rhs: Self) -> Self::Output {
-        Self {
-            numerator: self.numerator.clone() * rhs.denominator.clone()
-                - rhs.numerator.clone() * self.denominator.clone(),
-            denominator: self.denominator * rhs.denominator,
-        }
-    }
+    fn div(self, rhs: Self) -> Self::Output { Ok(self * rhs.try_inverse()?) }
 }
 
 impl<T> Display for Fraction<T>
