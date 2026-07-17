@@ -43,7 +43,7 @@ where
 
         Self::try_new(fraction)
     }
-    pub(crate) fn from_reduced(fraction: Fraction<T>) -> Self {
+    pub(crate) fn from_fraction(fraction: Fraction<T>) -> Self {
         Rational { fraction: fraction.reduced() }
     }
 }
@@ -68,7 +68,7 @@ where
 {
     type Output = Self;
     fn add(self, rhs: Self) -> Self::Output {
-        Self::from_reduced(self.fraction + rhs.fraction)
+        Self::from_fraction(self.fraction + rhs.fraction)
     }
 }
 
@@ -79,7 +79,7 @@ where
 {
     type Output = Self;
     fn sub(self, rhs: Self) -> Self::Output {
-        Self::from_reduced(self.fraction - rhs.fraction)
+        Self::from_fraction(self.fraction - rhs.fraction)
     }
 }
 
@@ -90,7 +90,7 @@ where
 {
     type Output = Self;
     fn mul(self, rhs: Self) -> Self::Output {
-        Self::from_reduced(self.fraction * rhs.fraction)
+        Self::from_fraction(self.fraction * rhs.fraction)
     }
 }
 
