@@ -5,7 +5,7 @@ use b3_core::error::Result;
 use b3_core::validate::Validate;
 use std::fmt::{Display, Formatter};
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)]
 enum Constant<T: Integer> {
     Rational(Rational<T>),
     Pi,
@@ -13,17 +13,17 @@ enum Constant<T: Integer> {
     Phi,
 }
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 enum UnaryOperator {
     Neg, Sqrt, Sin, Cos, Tan, Exp, Ln,
 }
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, PartialEq, Debug)]
 enum BinaryOperator {
     Add, Sub, Mul, Div, Pow,
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)]
 enum Expression<T: Integer> {
     Constant(Constant<T>),
     Unary {
@@ -37,7 +37,7 @@ enum Expression<T: Integer> {
     },
 }
 
-#[derive(Clone, PartialEq)]
+#[derive(Clone, PartialEq, Debug)]
 pub struct Real<T>
 where
     T: Integer,
