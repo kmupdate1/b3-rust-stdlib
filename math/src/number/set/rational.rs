@@ -96,10 +96,7 @@ where
 {
     type Output = Result<Self, RationalError>;
     fn div(self, rhs: Self) -> Self::Output {
-        Ok(Self::from_reduced(
-            (self.fraction / rhs.fraction)
-                .map_err(RationalError::from)?
-        ))
+        Ok(self * rhs.try_inverse()?)
     }
 }
 
@@ -210,6 +207,16 @@ mod tests {
         let c = a + b;
 
         assert_eq!(format!("{}", c), "1/1");
+    }
+
+    #[test]
+    fn rational_sub_is_reduced() {
+        let a = Rational::from_parts(5, 6).unwrap();
+        let b = Rational::from_parts(1, 6).unwrap();
+
+        let c = a - b;
+
+        assert_eq!(c, Rational::from_parts(2, 3).unwrap());
     }
 
     #[test]
