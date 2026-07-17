@@ -93,17 +93,6 @@ where
             return  Err(FractionError::ZeroDenominator)
         }
 
-        /// TODO:
-        /// NaN / Infinite の検証は、Float 系 trait 設計後に追加する。
-        ///
-        /// if self.numerator.is_nan() {
-        ///     return  Err(RationalError::NaN)
-        /// }
-        ///
-        /// if self.denominator.is_nan() {
-        ///     return  Err(RationalError::NaN)
-        /// }
-
         Ok(())
     }
 }
