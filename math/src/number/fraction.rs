@@ -1,6 +1,6 @@
 use crate::algebra::{Add, AdditiveInverse, Div, Mul, MultiplicativeInverse, Neg, One, Sub, Zero};
 use crate::number::gcd::GreatestCommonDivisor;
-use crate::number::FractionError;
+use crate::number::{FractionError, Integer};
 use b3_core::error::Result;
 use b3_core::validate::Validate;
 use core::mem::swap;
@@ -11,12 +11,18 @@ use std::fmt::{Display, Formatter};
  */
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub struct Fraction<T> {
+pub struct Fraction<T>
+where
+    T: Integer,
+{
     numerator: T,
     denominator: T,
 }
 
-impl<T> Fraction<T> {
+impl<T> Fraction<T>
+where
+    T: Integer,
+{
     #[deprecated(since = "0.2.0", note = "use `try_new` instead")]
     pub fn new(numerator: T, denominator: T) -> Self {
         Self { numerator, denominator }
@@ -29,7 +35,7 @@ impl<T> Fraction<T> {
 
 impl<T> Fraction<T>
 where
-    T: Zero,
+    T: Zero + Integer,
 {
     pub fn try_new(numerator: T, denominator: T) -> Result<Self, FractionError> {
         let fraction = Fraction { numerator, denominator };
@@ -40,7 +46,7 @@ where
 
 impl<T> AdditiveInverse for Fraction<T>
 where
-    T: Neg<Output = T> + Clone,
+    T: Integer + Neg<Output = T> + Clone,
 {
     fn inverse(&self) -> Self {
         Self {
@@ -56,7 +62,7 @@ where
 
 impl<T> MultiplicativeInverse for Fraction<T>
 where
-    T: Zero + Clone,
+    T: Integer + Zero + Clone,
 {
     type Output = Self;
     type Error = FractionError;
@@ -78,7 +84,7 @@ where
 
 impl<T> Validate for  Fraction<T>
 where
-    T: Zero,
+    T: Integer + Zero,
 {
     type Error = FractionError;
 
@@ -104,7 +110,7 @@ where
 
 impl<T> Fraction<T>
 where
-    T: GreatestCommonDivisor + One + PartialEq,
+    T: Integer + GreatestCommonDivisor + One + PartialEq,
 {
     pub fn is_reduced(&self) -> bool {
         self.numerator.gcd(&self.denominator).is_one()
@@ -113,7 +119,7 @@ where
 
 impl<T> Fraction<T>
 where
-    T: GreatestCommonDivisor + One + Div<Output = T> + Clone,
+    T: Integer + GreatestCommonDivisor + One + Div<Output = T> + Clone,
 {
     pub fn reduce(&mut self) {
         let gcd = self.numerator.gcd(&self.denominator);
@@ -133,7 +139,7 @@ where
 
 impl<T> Mul for Fraction<T>
 where
-    T: Mul<Output = T>,
+    T: Integer + Mul<Output = T>,
 {
     type Output = Self;
 
@@ -147,7 +153,7 @@ where
 
 impl<T> Div for Fraction<T>
 where
-    T: Zero + Clone + Mul<Output = T>,
+    T: Integer + Zero + Clone + Mul<Output = T>,
 {
     type Output = Result<Self, FractionError>;
 
@@ -163,7 +169,7 @@ where
 
 impl<T> Add for Fraction<T>
 where
-    T: Add<Output = T> + Mul<Output = T> + Clone,
+    T: Integer + Add<Output = T> + Mul<Output = T> + Clone,
 {
     type Output = Self;
 
@@ -178,7 +184,7 @@ where
 
 impl<T> Sub for Fraction<T>
 where
-    T: Sub<Output = T> + Mul<Output = T> + Clone,
+    T: Integer + Sub<Output = T> + Mul<Output = T> + Clone,
 {
     type Output = Self;
 
@@ -193,22 +199,12 @@ where
 
 impl<T> Display for Fraction<T>
 where
-    T: Display,
+    T: Integer + Display,
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}/{}", self.numerator, self.denominator)
     }
 }
-
-macro_rules! impl_fraction_eval {
-    ($($t:ty),* $(,)?) => {$(
-        impl Fraction<$t> {
-            pub fn to_rational(&self) -> $t { self.numerator / self.denominator }
-        }
-    )*};
-}
-
-impl_fraction_eval!(f32, f64);
 
 #[cfg(test)]
 mod tests {
@@ -390,33 +386,5 @@ mod tests {
 
         assert_eq!(c.numerator(), &1);
         assert_eq!(c.denominator(), &6);
-    }
-
-    #[test]
-    fn fraction_to_rational_f32() {
-        let fraction = Fraction::new(1.0f32, 2.0f32);
-
-        assert_eq!(fraction.to_rational(), 0.5f32);
-    }
-
-    #[test]
-    fn fraction_to_rational_f64() {
-        let fraction = Fraction::new(1.0f64, 2.0f64);
-
-        assert_eq!(fraction.to_rational(), 0.5f64);
-    }
-
-    #[test]
-    fn fraction_to_rational_f32_integer() {
-        let fraction = Fraction::new(6.0f32, 3.0f32);
-
-        assert_eq!(fraction.to_rational(), 2.0f32);
-    }
-
-    #[test]
-    fn fraction_to_rational_f64_integer() {
-        let fraction = Fraction::new(6.0f64, 3.0f64);
-
-        assert_eq!(fraction.to_rational(), 2.0f64);
     }
 }

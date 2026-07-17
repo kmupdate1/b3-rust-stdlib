@@ -1,17 +1,23 @@
 use crate::algebra::{Add, AdditiveInverse, Div, Mul, MultiplicativeInverse, Neg, One, Sub, Zero};
 use crate::number::gcd::GreatestCommonDivisor;
 use crate::number::set::error::RationalError;
-use crate::number::Fraction;
+use crate::number::{Fraction, Integer};
 use b3_core::error::Result;
 use b3_core::validate::Validate;
 use std::fmt::{Display, Formatter};
 
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub struct Rational<T> {
+pub struct Rational<T>
+where
+    T: Integer,
+{
     fraction: Fraction<T>,
 }
 
-impl<T> Rational<T> {
+impl<T> Rational<T>
+where
+    T: Integer,
+{
     #[deprecated(since = "0.2.0", note = "use `try_new` instead")]
     pub fn new(fraction: Fraction<T>) -> Self {
         Self { fraction }
@@ -23,7 +29,7 @@ impl<T> Rational<T> {
 
 impl<T> Rational<T>
 where
-    T: Zero + One + GreatestCommonDivisor + Div<Output = T> + Clone,
+    T: Integer + Zero + One + GreatestCommonDivisor + Div<Output = T> + Clone,
 {
     pub fn try_new(fraction: Fraction<T>) -> Result<Self, RationalError> {
         let rational = Self { fraction: fraction.reduced() };
@@ -44,7 +50,7 @@ where
 
 impl<T> Validate for Rational<T>
 where
-    T: Zero,
+    T: Integer + Zero,
 {
     type Error = RationalError;
 
@@ -57,7 +63,7 @@ where
 
 impl<T> Add for Rational<T>
 where
-    T: Add<Output = T> + Mul<Output = T> + Clone
+    T: Integer + Add<Output = T> + Mul<Output = T> + Clone
     + Div<Output = T> + Zero + One + GreatestCommonDivisor,
 {
     type Output = Self;
@@ -68,7 +74,7 @@ where
 
 impl<T> Sub for Rational<T>
 where
-    T: Sub<Output = T> + Mul<Output = T> + Clone
+    T: Integer + Sub<Output = T> + Mul<Output = T> + Clone
     + Div<Output = T> + Zero + One + GreatestCommonDivisor,
 {
     type Output = Self;
@@ -79,7 +85,7 @@ where
 
 impl<T> Mul for Rational<T>
 where
-    T: Mul<Output = T>
+    T: Integer + Mul<Output = T>
     + Div<Output = T> + Zero + One + GreatestCommonDivisor + Clone,
 {
     type Output = Self;
@@ -90,7 +96,7 @@ where
 
 impl<T> Div for Rational<T>
 where
-    T: Zero + Clone + Mul<Output = T>
+    T: Integer + Zero + Clone + Mul<Output = T>
     + Div<Output = T> + One + GreatestCommonDivisor,
 {
     type Output = Result<Self, RationalError>;
@@ -101,7 +107,7 @@ where
 
 impl<T> AdditiveInverse for Rational<T>
 where
-    T: Neg<Output = T> + Clone,
+    T: Integer + Neg<Output = T> + Clone,
 {
     fn inverse(&self) -> Self {
         Self { fraction: self.fraction.inverse() }
@@ -112,7 +118,7 @@ where
 
 impl<T> MultiplicativeInverse for Rational<T>
 where
-    T: Zero + Clone,
+    T: Integer + Zero + Clone,
 {
     type Output = Self;
     type Error = RationalError;
@@ -132,7 +138,7 @@ where
 
 impl<T> Display for Rational<T>
 where
-    T: Display,
+    T: Integer + Display,
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "{}", self.fraction)
