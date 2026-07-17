@@ -96,11 +96,10 @@ where
 {
     type Output = Result<Self, RationalError>;
     fn div(self, rhs: Self) -> Self::Output {
-        Ok(Self {
-            fraction: (self.fraction / rhs.fraction)
+        Ok(Self::from_reduced(
+            (self.fraction / rhs.fraction)
                 .map_err(RationalError::from)?
-                .reduced(),
-        })
+        ))
     }
 }
 
