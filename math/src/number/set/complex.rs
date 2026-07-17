@@ -4,6 +4,7 @@ use crate::number::{ComplexError, Integer, Real};
 use b3_core::error::Result;
 use b3_core::validate::Validate;
 
+#[derive(Debug, Clone)]
 pub struct Complex<T: Integer> {
     real: Real<T>,
     imaginary: Real<T>,
@@ -265,5 +266,144 @@ mod tests {
 
         assert_eq!(*c.real(), Real::from(Rational::from_parts(2, 1).unwrap()));
         assert_eq!(*c.imaginary(), Real::from(Rational::from_parts(0, 1).unwrap()));
+    }
+
+    #[test]
+    fn expression_showcase() {
+        let one = Real::<i32>::one();
+
+        let expr = (
+            (
+                (
+                    (Real::pi() + Real::e().sqrt())
+                        * (Real::phi() - one.clone())
+                )
+                    /
+                    (
+                        Real::pi().sin()
+                            + Real::e().ln()
+                    )
+            )
+                .unwrap()
+                +
+                (
+                    Real::phi()
+                        .pow(one.clone() + one.clone())
+                        *
+                        (
+                            Real::pi()
+                                -
+                                Real::e().exp()
+                        )
+                )
+        )
+            .sqrt()
+            +
+            (
+                (
+                    Real::pi()
+                        /
+                        (
+                            Real::phi()
+                                + Real::e()
+                        )
+                )
+                    .unwrap()
+                    .sin()
+                    *
+                    (
+                        (
+                            Real::e()
+                                /
+                                Real::phi()
+                        )
+                            .unwrap()
+                            .ln()
+                    )
+            );
+
+        println!();
+        println!("===============================");
+        println!("{expr}");
+        println!("===============================");
+    }
+
+    #[test]
+    fn expression_show_long() {
+        let z1 = Complex::new(
+            (
+                (
+                    Real::<i32>::pi()
+                        +
+                        Real::e().sqrt()
+                )
+                    /
+                    (
+                        Real::phi()
+                            -
+                            Real::one()
+                    )
+            ).unwrap(),
+            Real::pi().sin()
+                +
+                Real::e().ln(),
+        );
+
+        let z2 = Complex::new(
+            Real::phi().pow(
+                Real::one() + Real::one()
+            )
+                *
+                (
+                    Real::pi()
+                        -
+                        Real::e().exp()
+                ),
+            (
+                Real::pi()
+                    /
+                    Real::e()
+            ).unwrap(),
+        );
+
+        let expr = ((z1.clone() * z2.clone()) + z1.conjugate()) / z2;
+        println!("{:?}", expr);
+    }
+
+    #[test]
+    fn expression_show_10_000_nodes() {
+        let mut expr = Real::<i32>::pi();
+
+        for _ in 0..10_000 {
+            expr = expr + Real::e();
+        }
+
+        println!("{}", expr);
+    }
+
+    #[test]
+    fn expression_show_100_000_nodes() {
+        let mut expr = Real::<i32>::pi();
+
+        for i in 0..100_000 {
+            expr = (expr * Real::phi()) + Real::e().sqrt();
+
+            if i % 1000 == 0 {
+                println!("{i}");
+            }
+        }
+    }
+
+    #[test]
+    fn expression_show_10_000_nodes_check() {
+        let mut expr = Real::<i32>::pi();
+
+        for _ in 0..10_000 {
+            expr = expr + Real::e();
+        }
+
+        // std::mem::forget(expr);
+        drop(expr);
+        // println!("{expr}");
     }
 }
