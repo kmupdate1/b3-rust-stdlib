@@ -9,6 +9,7 @@
       <sourceFolder url="file://$MODULE_DIR$/mem/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/num/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/quantity/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/render/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/runtime/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/stdlib/src" isTestSource="false" />

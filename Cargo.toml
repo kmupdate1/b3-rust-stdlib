@@ -8,7 +8,8 @@ members = [
     "finance",
     "data",
     "runtime",
-    "stdlib"
+    "render",
+    "stdlib",
 ]
 
 [workspace.package]
