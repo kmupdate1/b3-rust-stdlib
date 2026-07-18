@@ -30,7 +30,7 @@ impl UnicodeRenderer {
     fn visit_constant<T>(&self, constant: &Constant<T>, out: &mut String)
     where
         T: Integer + Display,
-    { let _ = write!(out, "{constant}"); }
+    { let _ = write!(out, "({constant})"); }
 
     fn visit_unary<T>(
         &self,
@@ -41,13 +41,13 @@ impl UnicodeRenderer {
     where
         T: Integer + Display,
     {
-        out.push('(');
+        out.push('{');
 
         let _ = write!(out, "{op}");
 
         self.visit(operand, out);
 
-        out.push(')');
+        out.push('}');
     }
 
     fn visit_binary<T>(
@@ -60,15 +60,15 @@ impl UnicodeRenderer {
     where
         T: Integer + Display,
     {
-        out.push('(');
+        out.push('[');
 
         self.visit(lhs, out);
 
-        let _ = write!(out, "{op}");
+        let _ = write!(out, " {op} ");
 
         self.visit(rhs, out);
 
-        out.push(')');
+        out.push(']');
     }
 }
 
@@ -88,10 +88,9 @@ impl<T> Renderer<T> for UnicodeRenderer
 
 #[cfg(test)]
 mod tests {
-    use std::fmt::Debug;
     use crate::{RenderStyle, Renderer, UnicodeRenderer};
-    use b3_math::algebra::{AdditiveInverse, One};
-    use b3_math::number::{Rational, Real};
+    use b3_math::algebra::One;
+    use b3_math::number::Real;
 
     #[test]
     fn debug_renderer_matches_display() {
@@ -146,15 +145,16 @@ mod tests {
                     )
             );
 
-        let renderer = UnicodeRenderer::new(RenderStyle::default());
-
         let expr = real.as_expression();
 
+        let renderer = UnicodeRenderer::new(RenderStyle::default());
         println!();
         println!("===============================");
         println!("{real}");
         println!("===============================");
         println!("{}", renderer.debug(expr));
+        println!("===============================");
+        println!("{:?}", real);
         println!("===============================");
 
         assert_ne!(real.to_string(),renderer.debug(expr));
