@@ -6,7 +6,7 @@ use b3_core::validate::Validate;
 use std::fmt::{Display, Formatter};
 
 #[derive(Clone, PartialEq, Debug)]
-enum Constant<T: Integer> {
+pub enum Constant<T: Integer> {
     Rational(Rational<T>),
     Pi,
     E,
@@ -14,17 +14,17 @@ enum Constant<T: Integer> {
 }
 
 #[derive(Clone, Copy, PartialEq, Debug)]
-enum UnaryOperator {
+pub enum UnaryOperator {
     Neg, Sqrt, Sin, Cos, Tan, Exp, Ln,
 }
 
 #[derive(Clone, Copy, PartialEq, Debug)]
-enum BinaryOperator {
+pub enum BinaryOperator {
     Add, Sub, Mul, Div, Pow,
 }
 
 #[derive(Clone, PartialEq, Debug)]
-enum Expression<T: Integer> {
+pub enum Expression<T: Integer> {
     Constant(Constant<T>),
     Unary {
         op: UnaryOperator,
