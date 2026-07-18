@@ -282,39 +282,18 @@ impl Display for BinaryOperator {
     }
 }
 
-impl<T> Expression<T>
-where
-    T: Integer + Display,
-{
-    fn fmt_root(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Expression::Binary { op, lhs, rhs } => {
-                write!(f, "{lhs} {op} {rhs}")
-            }
-            _ => self.fmt(f)
-        }
-    }
-    fn fmt_nested(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        todo!()
-    }
-}
-
 impl<T> Display for Expression<T>
 where
     T: Integer + Display,
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
-            Expression::Constant(c) => write!(f, "{c}"),
-            Expression::Unary { op, operand } => {
-                match op {
-                    UnaryOperator::Neg => write!(f, "{op}{operand}"),
-                    _ => write!(f, "{op}({operand})"),
-                }
-            }
-            Expression::Binary { op, lhs, rhs } => {
+            Expression::Constant(c) =>
+                write!(f, "{c}"),
+            Expression::Unary { op, operand } =>
+                write!(f, "({op}({operand}))"),
+            Expression::Binary { op, lhs, rhs } =>
                 write!(f, "({lhs} {op} {rhs})")
-            }
         }
     }
 }
