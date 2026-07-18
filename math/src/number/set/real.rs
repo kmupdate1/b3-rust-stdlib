@@ -242,6 +242,14 @@ where
     }
 }
 
+impl<T> Real<T>
+where
+    T: Integer,
+{
+    pub fn as_expression(&self) -> &Expression<T> { &self.expr }
+    pub fn into_expression(self) -> Expression<T> { self.expr }
+}
+
 impl<T> Display for Constant<T>
 where
     T: Integer + Display,
